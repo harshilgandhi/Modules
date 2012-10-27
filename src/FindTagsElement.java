@@ -4,28 +4,36 @@ import java.io.*;
 import java.net.*;
 
 public class FindTagsElement {
-	private String ret;
-	public String findElements(String sourceUrlString) throws Exception {
-
-		ret = "";
-		if (sourceUrlString.indexOf(':')==-1) sourceUrlString="file:"+sourceUrlString;
+        
+        public ArrayList<String> find(String url, String tag) throws Exception{
+                ArrayList<String>  ret=new ArrayList<String>();
+		if (url.indexOf(':')==-1) url="file:"+url;
 		MicrosoftConditionalCommentTagTypes.register();
 		MasonTagTypes.register();
-		Source source=new Source(new URL(sourceUrlString));
-		System.out.println("\n*******************************************************************************\n");
-
-		System.out.println("A Elements:");
-		displaySegments(source.getAllElements(HTMLElementName.A));
-		System.out.println("P Elements:");
-		displaySegments(source.getAllElements(HTMLElementName.P));
+		Source source=new Source(new URL(url));
+		
+                switch(tag){
+                      case "a":
+                          System.out.println("A Elements:");
+                          displayAndSaveSegments(source.getAllElements(HTMLElementName.A),ret);
+                          break;
+                      case "p":
+                          System.out.println("P Elements:");
+                          displayAndSaveSegments(source.getAllElements(HTMLElementName.P),ret);
+                          break;                 
+                }
 		
 		return ret;
-  }
+            
+        }
 
-	private static void displaySegments(List<? extends Segment> segments) {
-		for (Segment segment : segments) {
+	private static void displayAndSaveSegments(List<? extends Segment> segments, ArrayList<String> ret) {
+		
+            for (Segment segment : segments) {
 			System.out.println("-------------------------------------------------------------------------------");
 			System.out.println(segment);
+                        ret.add(segment.toString());
+                        
 		}
 		System.out.println("\n*******************************************************************************\n");
 	}
