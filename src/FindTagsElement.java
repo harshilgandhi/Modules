@@ -3,7 +3,7 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-public class FindSpecificTags {
+public class FindTagsElement {
 	public static void main(String[] args) throws Exception {
 		String sourceUrlString="http://www.psych.nyu.edu/courses/ugfall12.html";
 		if (sourceUrlString.indexOf(':')==-1) sourceUrlString="file:"+sourceUrlString;
@@ -14,6 +14,8 @@ public class FindSpecificTags {
 
 		System.out.println("A Elements:");
 		displaySegments(source.getAllElements(HTMLElementName.A));
+		System.out.println("P Elements:");
+		displaySegments(source.getAllElements(HTMLElementName.P));
   }
 
 	private static void displaySegments(List<? extends Segment> segments) {
