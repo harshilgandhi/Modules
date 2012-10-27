@@ -1,15 +1,14 @@
 
 public class Module {
-	private String num;
 	private String name;
 	private String desc;
 	private String preReq[];
 	
-	Module(String num, String name, String desc)
+	Module(String num, String name, String desc, String[] preReq)
 	{
-		this.num = num;
 		this.name = name;
 		this.desc = desc;
+                this.preReq=preReq;
 	}
 	
 	public String getDesc() {
@@ -28,13 +27,6 @@ public class Module {
 		this.name = name;
 	}
 	
-	public String getNum() {
-		return num;
-	}
-	
-	public void setNum(String num) {
-		this.num = num;
-	}
 	
 	public String[] getPreReq() {
 		return preReq;
