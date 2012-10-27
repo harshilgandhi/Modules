@@ -11,14 +11,13 @@ public class DisplayAllElements {
 	
 	public static String getAllElements(String sourceUrlString)
 	{
-		
+            
 	}
 	public static void main(String[] args) throws Exception {
 		
 		
 		if (sourceUrlString.indexOf(':')==-1) sourceUrlString="file:"+sourceUrlString;
 		MicrosoftConditionalCommentTagTypes.register();
-                testestse
 		PHPTagTypes.register();
 		PHPTagTypes.PHP_SHORT.deregister(); // remove PHP short tags for this example otherwise they override processing instructions
 		MasonTagTypes.register();
