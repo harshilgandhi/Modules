@@ -5,7 +5,7 @@ import java.net.*;
 
 public class FindSpecificTags {
 	public static void main(String[] args) throws Exception {
-		String sourceUrlString="http://www.dartmouth.edu/~psych/undergrad/courses/index.html";
+		String sourceUrlString="http://www.psych.nyu.edu/courses/ugfall12.html";
 		
 		
 		if (sourceUrlString.indexOf(':')==-1) sourceUrlString="file:"+sourceUrlString;
