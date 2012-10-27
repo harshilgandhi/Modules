@@ -8,8 +8,13 @@ import net.htmlparser.jericho.PHPTagTypes;
 import net.htmlparser.jericho.Source;
 
 public class DisplayAllElements {
+	
+	public static String getAllElements(String sourceUrlString)
+	{
+		
+	}
 	public static void main(String[] args) throws Exception {
-		String sourceUrlString="http://www.dartmouth.edu/~psych/undergrad/courses/index.html";
+		
 		
 		if (sourceUrlString.indexOf(':')==-1) sourceUrlString="file:"+sourceUrlString;
 		MicrosoftConditionalCommentTagTypes.register();
