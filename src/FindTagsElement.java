@@ -20,7 +20,12 @@ public class FindTagsElement {
                       case "p":
                           System.out.println("P Elements:");
                           displayAndSaveSegments(source.getAllElements(HTMLElementName.P),ret);
-                          break;                 
+                          break;        
+                      case "div":
+                          System.out.println("DIV Elements:");
+                          displayAndSaveSegments(source.getAllElements(HTMLElementName.DIV),ret);
+                          break;        
+                          
                 }
 		
 		return ret;
@@ -30,8 +35,8 @@ public class FindTagsElement {
 	private static void displayAndSaveSegments(List<? extends Segment> segments, ArrayList<String> ret) {
 		
             for (Segment segment : segments) {
-			System.out.println("-------------------------------------------------------------------------------");
-			System.out.println(segment);
+			//System.out.println("-------------------------------------------------------------------------------");
+			//System.out.println(segment);
                         ret.add(segment.toString());
                         
 		}
