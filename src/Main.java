@@ -7,10 +7,10 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-        FindTagsElement test = new FindTagsElement();
-        ArrayList<String> divList = test.find("http://www.cs.washington.edu/education/courses/","div");
-        ArrayList<String> aList = test.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","a");
-        ArrayList<String> plist=test.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","p");
+        FindTagsElement findTagsObj = new FindTagsElement();
+        ArrayList<String> divList = findTagsObj.find("http://www.cs.washington.edu/education/courses/","div");
+        ArrayList<String> aList = findTagsObj.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","a");
+        ArrayList<String> plist=findTagsObj.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","p");
                   
         ArrayList<String> listUsing=divList;
         ArrayList<String> titles=new ArrayList<String>();
