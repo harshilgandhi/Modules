@@ -1,4 +1,10 @@
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 
 public class Main {
@@ -6,17 +12,45 @@ public class Main {
 	/**
 	 * @param args
 	 */
+	private static boolean debug = true;
+	private static URL url;
+	private static URLConnection urlConnection;
+	private static InputStream inputStream;
+	private static String content;
+	private static byte[] contentRaw;
+	
 	public static void main(String[] args) throws Exception {
-        FindTagsElement findTagsObj = new FindTagsElement();
-        String url="http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html";
-        ArrayList<String> divList = findTagsObj.find(url,"div");
-        ArrayList<String> aList = findTagsObj.find(url,"a");
-        ArrayList<String> plist=findTagsObj.find(url,"p");
+		String inputUrl = "http://www.cis.upenn.edu/ugrad/all-courses.shtml";
+		Document htmlDoc = Jsoup.connect(inputUrl).get();
+		System.out.println(htmlDoc);
+		Elements aElements = htmlDoc.select("a");
+		Elements pElements = htmlDoc.select("p");
+		Elements divElements = htmlDoc.select("div");
+		Elements tableElements = htmlDoc.select("table");
+		Main.log(aElements.size());
+		Main.log(pElements.size());
+		Main.log(divElements.size());
+		Main.log(tableElements.size());
+		
+	}
+	
+	private static void log(Object o)
+	{
+		if(debug)
+			System.err.println(o);
+	}
+}
+
+/* IN MAIN:
+ * FindTagsElement findTagsObj = new FindTagsElement();
+        ArrayList<String> divList = findTagsObj.find("http://www.cs.washington.edu/education/courses/","div");
+        ArrayList<String> aList = findTagsObj.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","a");
+        ArrayList<String> plist=findTagsObj.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","p");
                   
         ArrayList<String> listUsing=divList;
         ArrayList<String> titles=new ArrayList<String>();
         ArrayList<String> descs=new ArrayList<String>();
-        //if(divList.size()<20)
+        if(divList.size()<20)
             listUsing=plist;
         for (String i: listUsing)
         {
@@ -72,6 +106,4 @@ public class Main {
             		if(k!=null)
             			System.out.println("Course Description: "+k);
             }
-        }
-	}
-}
+ */
