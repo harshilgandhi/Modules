@@ -8,14 +8,15 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
         FindTagsElement findTagsObj = new FindTagsElement();
-        ArrayList<String> divList = findTagsObj.find("http://www.cs.washington.edu/education/courses/","div");
-        ArrayList<String> aList = findTagsObj.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","a");
-        ArrayList<String> plist=findTagsObj.find("http://psych.nyu.edu/courses/undergraduatecatalog.html#V89.0001","p");
+        String url="http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html";
+        ArrayList<String> divList = findTagsObj.find(url,"div");
+        ArrayList<String> aList = findTagsObj.find(url,"a");
+        ArrayList<String> plist=findTagsObj.find(url,"p");
                   
         ArrayList<String> listUsing=divList;
         ArrayList<String> titles=new ArrayList<String>();
         ArrayList<String> descs=new ArrayList<String>();
-        if(divList.size()<20)
+        //if(divList.size()<20)
             listUsing=plist;
         for (String i: listUsing)
         {
