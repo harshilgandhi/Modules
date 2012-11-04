@@ -12,7 +12,6 @@ A.The webpage contains all information: We can get all <p> tags
 B.The webpage has list of links to the courses:We have to look at many links and traverse through each for the desc.
 	1.Finding the "CELL".. the smallest unit of HTML that has all the course details.
 	2.The tags <li>, <tr> can be these cells.
-
 C.Two cases for getting pre-requisites:
 	1.If there is another separate section of course pre-requisites (generally included in the desc), then...
 	2.Pre-requisites are encompassed in the course description... identifying and extracting those.
@@ -27,3 +26,6 @@ E.Extracting course numbers... (??)
 
 Additional: -->Linear notion of courses... as in prereq courses appear and are registered before advanced courses which need them...
 			-->Number of credits (??)
+
+
+Regex cheat sheet: http://regexlib.com/(A(ndUccU6vz0Brj4iAJeR-zIijNgq9AbQ34ZnxYv0JhuSFdB8Gz2O45d8maOUOM7OlEWztr_wdGAAQkmOGSyINr-KFMwxG96xly4UPybYvmsLze16K7Xe6lPQLNhGXaMFKprv_d72Ow4QSnqt2rIdSwON_r5nALf8Q9QMdi8G1Vv1iWZBR0R-xfEC78MXTUjeP0))/CheatSheet.aspx
