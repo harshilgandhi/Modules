@@ -12,6 +12,7 @@ A.The webpage contains all information: We can get all <p> tags
 B.The webpage has list of links to the courses:We have to look at many links and traverse through each for the desc.
 	1.Finding the "CELL".. the smallest unit of HTML that has all the course details.
 	2.The tags <li>, <tr> can be these cells.
+	3.NOTE: http://www.cis.upenn.edu/ugrad/all-courses.shtml IS A CHALLENGE FOR FINDING THE CELL. <<--
 C.Two cases for getting pre-requisites:
 	1.If there is another separate section of course pre-requisites (generally included in the desc), then...
 	2.Pre-requisites are encompassed in the course description... identifying and extracting those.

@@ -1,9 +1,15 @@
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
@@ -18,20 +24,61 @@ public class Main {
 	private static InputStream inputStream;
 	private static String content;
 	private static byte[] contentRaw;
+	private static Pattern pattern;
+	private static Matcher matcher;
+	private static String htmlDocTxt;
+	private static Elements aElements;
+	private static Elements pElements;
+	private static Elements divElements;
+	private static Elements trElements;
+	private static Elements tdElements;
+	private static Elements liElements;
 	
 	public static void main(String[] args) throws Exception {
-		String inputUrl = "http://www.cis.upenn.edu/ugrad/all-courses.shtml";
-		Document htmlDoc = Jsoup.connect(inputUrl).get();
-		System.out.println(htmlDoc);
-		Elements aElements = htmlDoc.select("a");
-		Elements pElements = htmlDoc.select("p");
-		Elements divElements = htmlDoc.select("div");
-		Elements tableElements = htmlDoc.select("table");
-		Main.log(aElements.size());
-		Main.log(pElements.size());
-		Main.log(divElements.size());
-		Main.log(tableElements.size());
 		
+		String[] inputUrls = new String[] {"http://www.cs.columbia.edu/education/courses/list?yearterm=20123"};
+		
+		for(int i = 0; i < inputUrls.length; i ++)
+		{
+			
+			String inputUrl = inputUrls[i];
+			Document htmlDoc = Jsoup.connect(inputUrl).get();
+			
+			aElements = htmlDoc.select("a");
+			pElements = htmlDoc.select("p");
+			divElements = htmlDoc.select("div");
+			trElements = htmlDoc.select("tr");
+			tdElements = htmlDoc.select("td");
+			liElements = htmlDoc.select("li");
+			
+			htmlDocTxt = htmlDoc.toString();
+			
+			String regex="(\\b[A-Z]{2,4}\\s[a-zA-Z]?[0-9]{2,4})";	// Any Single Word Character (Not Whitespace) 1
+			pattern = Pattern.compile(regex);
+			matcher = pattern.matcher(htmlDocTxt);
+			
+			while (matcher.find())
+			{
+				String found=matcher.group();
+				int countFound=matcher.groupCount();
+				Set<Element> eSet = new HashSet<Element>();
+				HashMap<String, String> eMap = new HashMap<String, String>();
+				Elements e = htmlDoc.getElementsContainingOwnText(found);
+				Elements courseLinks = new Elements();
+				for(Element element : e)
+				{
+//					Elements parentElements = e.parents();
+//					Main.log("Immediate Parent: " + parentElements.get(0));
+					courseLinks.add(element);
+					courseLinks.get(0).getElementsByAttribute("href");
+				}
+				eSet.add(e.get(0));
+//				Main.log(found + "\t" + e.get(0));
+				int endIndex = courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6).indexOf("\"");
+				Main.log(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6,endIndex));
+			}
+
+		}
 	}
 	
 	private static void log(Object o)
@@ -40,6 +87,29 @@ public class Main {
 			System.err.println(o);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* IN MAIN:
  * FindTagsElement findTagsObj = new FindTagsElement();
