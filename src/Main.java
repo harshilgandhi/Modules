@@ -36,7 +36,7 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-		String[] inputUrls = new String[] {"http://www.cs.umd.edu/class/"};
+		String[] inputUrls = new String[] {"http://www.cs.columbia.edu/education/courses/list?yearterm=20123"};
 		
 		for(int i = 0; i < inputUrls.length; i ++)
 		{
@@ -53,7 +53,7 @@ public class Main {
 			
 			htmlDocTxt = htmlDoc.toString();
 			
-			String regex="(\\b[A-Z]{2,4}\\s[a-zA-Z]?[0-9]{2,4}?[a-zA-Z])";	// Any Single Word Character (Not Whitespace) 1
+			String regex="(\\b[A-Z]{2,4}\\s[a-zA-Z]?[0-9]{2,4}[a-zA-Z]?)";	// Any Single Word Character (Not Whitespace) 1
 			pattern = Pattern.compile(regex);
 			matcher = pattern.matcher(htmlDocTxt);
 			
@@ -65,22 +65,14 @@ public class Main {
 				HashMap<String, String> eMap = new HashMap<String, String>();
 				Elements e = htmlDoc.getElementsContainingOwnText(found);
 				Elements courseLinks = new Elements();
-				for(Element element : e)
-				{
-//					Elements parentElements = e.parents();
-//					Main.log("Immediate Parent: " + parentElements.get(0));
-					courseLinks.add(element);
-					courseLinks.get(0).getElementsByAttribute("href");
-				}
+				courseLinks.add(e.get(0));
+				courseLinks.get(0).getElementsByAttribute("href");
 				eSet.add(e.get(0));
 				Main.log(found + "\t" + e.get(0));
 				int endIndex = courseLinks.get(0).toString().indexOf("\">");
-//				Main.log(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6).length());
-//				Main.log(endIndex);
-				Main.log(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6));
-				Main.log(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6,endIndex) + "<--");
+				Main.log(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6,endIndex));
 			}
-
+			
 		}
 	}
 	
