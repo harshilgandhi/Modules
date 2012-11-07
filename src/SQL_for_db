@@ -1,0 +1,53 @@
+use Module
+
+drop table Documents;
+drop table Terms;
+
+CREATE TABLE Documents (
+    docId INT NOT NULL AUTO_INCREMENT  PRIMARY KEY, 
+    Url VARCHAR(2083) NOT NULL,
+    Department VARCHAR(30) NOT NULL,
+    Size INT NOT NULL, 
+    Words INT NOT NULL);
+
+CREATE TABLE Terms (
+    termId INT NOT NULL AUTO_INCREMENT  PRIMARY KEY, 
+    docId INT NOT NULL,
+    word VARCHAR(100) NOT NULL,
+    count INT NOT NULL);
+
+
+select * from Terms;
+select * from Documents;
+
+
+use Module
+
+drop table Documents;
+drop table Terms;
+
+CREATE TABLE Documents (
+    docId INT NOT NULL AUTO_INCREMENT  PRIMARY KEY, 
+    Url VARCHAR(2083) NOT NULL,
+    Department VARCHAR(30) NOT NULL,
+    Size INT NOT NULL, 
+    Words INT NOT NULL);
+
+CREATE TABLE Terms (
+    termId INT NOT NULL AUTO_INCREMENT  PRIMARY KEY, 
+    docId INT NOT NULL,
+    word VARCHAR(100) NOT NULL,
+    count INT NOT NULL);
+
+
+select * from Terms;
+select * from Documents;
+
+
+
+load data local infile '/home/raanan/Desktop/PPS/Modules/data' into table Terms 
+fields terminated by ','
+lines terminated by '\n'
+(docId, word, count)
+
+
