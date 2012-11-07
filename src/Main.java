@@ -73,7 +73,7 @@ public class Main {
 				{	legitCount ++;
 					courseLinks.add(e.get(0));
 				}
-				else//Find an <a href="...">...</a> in Course description
+				else//Find an <a href="...">...</a> in Course title
 				{
 					
 				}
