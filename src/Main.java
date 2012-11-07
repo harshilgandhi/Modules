@@ -2,10 +2,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +37,7 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-		String[] inputUrls = new String[] {"http://www.cs.columbia.edu/education/courses/list?yearterm=20123"};
+		String[] inputUrls = new String[] {"http://www-inst.eecs.berkeley.edu/classes-eecs.html"};
 		
 		for(int i = 0; i < inputUrls.length; i ++)
 		{
@@ -54,34 +51,49 @@ public class Main {
 			liElements = htmlDoc.select("li");
 			htmlDocTxt = htmlDoc.toString();
 			
+			
+			///////////////////////////////////THIS IS FOR WEB PAGES DAT HAVE NO DESCRIPTIONS DIRECTLY.
 			//Finding course numbers
-			String regex="(\\b[A-Z]{2,4}\\s[a-zA-Z]?[0-9]{2,4}[a-zA-Z]?)";
+			String regex="(\\b[A-Z]{2,4}\\s?[a-zA-Z]?[0-9]{2,4}[a-zA-Z]?)";
 			pattern = Pattern.compile(regex);
 			matcher = pattern.matcher(htmlDocTxt);
 			List<String> links = new ArrayList<String>();
-			
+			Elements courseLinks = new Elements();
+			List<String> foundMatches = new ArrayList<String>();
+			int legitCount = 0;
 			while (matcher.find())
 			{
 				String found=matcher.group();//Course number in "found"
-				int countFound=matcher.groupCount();
-				Set<Element> eSet = new HashSet<Element>();
-				HashMap<String, String> eMap = new HashMap<String, String>();
+				foundMatches.add(found);
+//				int countFound=matcher.groupCount();
 				
 				//gets "a" or "p" or "td" or "li" in which this course number is found
 				Elements e = htmlDoc.getElementsContainingOwnText(found);
-				
-				Elements courseLinks = new Elements();
-				
-				//assuming the course number is a link itself
-				courseLinks.add(e.get(0));
-				courseLinks.get(0).getElementsByAttribute("href");
-				eSet.add(e.get(0));
-				Main.log(found + "\t" + e.get(0));
-				int endIndex = courseLinks.get(0).toString().indexOf("\">");
-				Main.log(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6,endIndex));
-				links.add(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6,endIndex));
-				//all course links stored in "links" list
-				
+				if(aElements.contains(e.get(0)))
+				{	legitCount ++;
+					courseLinks.add(e.get(0));
+				}
+				else//Find an <a href="...">...</a> in Course description
+				{
+					
+				}
+			}
+			if(legitCount <= 5)//If there are no course numbers at all on the page given... (links on Course Titles..) eg. MIT CS site... http://ocw.mit.edu/courses/electrical-engineering-and-computer-science/
+			{
+				for(Element e : aElements)// get all links first.. so we can find links that are on course titles somehow
+				{
+					Main.log(e);
+				}
+			}
+			for(int j = 0; j < courseLinks.size(); j ++)
+			{
+				courseLinks.get(j).getElementsByAttribute("href");
+				Main.log(foundMatches.get(j) + "\t" + courseLinks.get(j));
+				int endIndex = courseLinks.get(j).toString().indexOf("\">");
+				Main.log(courseLinks.get(j).toString().substring((courseLinks.get(j).toString().indexOf("href"))+6,endIndex));
+				links.add(courseLinks.get(j).toString().substring((courseLinks.get(j).toString().indexOf("href"))+6,endIndex));
+				Main.log(legitCount);
+				//all unprocessed course links stored in "links" list..
 			}
 		}
 	}
