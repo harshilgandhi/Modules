@@ -1,14 +1,18 @@
+import java.util.List;
+
 
 public class Module {
 	private String name;
 	private String desc;
-	private String preReq[];
+	private List<Module> preReqModules;
+	private List<Course> preReqCourses;
 	
-	Module(String num, String name, String desc, String[] preReq)
+	Module(String num, String name, String desc, List<Module> preReqModules, List<Course> preReqCourses)
 	{
 		this.name = name;
 		this.desc = desc;
-                this.preReq=preReq;
+        this.preReqModules=preReqModules;
+        this.preReqCourses = preReqCourses;
 	}
 	
 	public String getDesc() {
@@ -28,12 +32,20 @@ public class Module {
 	}
 	
 	
-	public String[] getPreReq() {
-		return preReq;
+	public List<Module> getPreReqModules() {
+		return preReqModules;
 	}
 	
-	public void setPreReq(String[] preReq) {
-		this.preReq = preReq;
+	public List<Course> getPreReq() {
+		return preReqCourses;
+	}
+	
+	public void setPreReqModules(List<Module> preReqModules) {
+		this.preReqModules = preReqModules;
+	}
+	
+	public void setPreReqCourses(List<Course> preReqCourses) {
+		this.preReqCourses = preReqCourses;
 	}
 
 }

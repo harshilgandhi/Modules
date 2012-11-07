@@ -1,8 +1,10 @@
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +35,8 @@ public class Main {
 	private static Elements trElements;
 	private static Elements tdElements;
 	private static Elements liElements;
+	private static List<Course> courseList = new ArrayList<Course>();
+	private static List<Module> moduleList = new ArrayList<Module>();
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -40,39 +44,45 @@ public class Main {
 		
 		for(int i = 0; i < inputUrls.length; i ++)
 		{
-			
 			String inputUrl = inputUrls[i];
 			Document htmlDoc = Jsoup.connect(inputUrl).get();
-			
 			aElements = htmlDoc.select("a");
 			pElements = htmlDoc.select("p");
 			divElements = htmlDoc.select("div");
 			trElements = htmlDoc.select("tr");
 			tdElements = htmlDoc.select("td");
 			liElements = htmlDoc.select("li");
-			
 			htmlDocTxt = htmlDoc.toString();
 			
-			String regex="(\\b[A-Z]{2,4}\\s[a-zA-Z]?[0-9]{2,4}[a-zA-Z]?)";	// Any Single Word Character (Not Whitespace) 1
+			//Finding course numbers
+			String regex="(\\b[A-Z]{2,4}\\s[a-zA-Z]?[0-9]{2,4}[a-zA-Z]?)";
 			pattern = Pattern.compile(regex);
 			matcher = pattern.matcher(htmlDocTxt);
+			List<String> links = new ArrayList<String>();
 			
 			while (matcher.find())
 			{
-				String found=matcher.group();
+				String found=matcher.group();//Course number in "found"
 				int countFound=matcher.groupCount();
 				Set<Element> eSet = new HashSet<Element>();
 				HashMap<String, String> eMap = new HashMap<String, String>();
+				
+				//gets "a" or "p" or "td" or "li" in which this course number is found
 				Elements e = htmlDoc.getElementsContainingOwnText(found);
+				
 				Elements courseLinks = new Elements();
+				
+				//assuming the course number is a link itself
 				courseLinks.add(e.get(0));
 				courseLinks.get(0).getElementsByAttribute("href");
 				eSet.add(e.get(0));
 				Main.log(found + "\t" + e.get(0));
 				int endIndex = courseLinks.get(0).toString().indexOf("\">");
 				Main.log(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6,endIndex));
+				links.add(courseLinks.get(0).toString().substring((courseLinks.get(0).toString().indexOf("href"))+6,endIndex));
+				//all course links stored in "links" list
+				
 			}
-			
 		}
 	}
 	

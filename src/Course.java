@@ -1,19 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+import java.util.List;
 
-/**
- *
- * @author Lannister
- */
+
 public class Course {
     private String num;
     private String uni;
     private String desc;
-    private String[] preReq;
+    private List<Course> preReq;
     
-    public Course(String num, String uni, String desc, String[] preReq)
+    public Course(String num, String uni, String desc, List preReq)
     {
         this.desc=desc;
         this.num=num;
@@ -33,11 +27,11 @@ public class Course {
         return uni;
     }
 
-    public String[] getPreReq() {
+    public List<Course> getPreReq() {
         return preReq;
     }
 
-    public void setPreReq(String[] preReq) {
+    public void setPreReq(List<Course> preReq) {
         this.preReq = preReq;
     } 
 
@@ -52,6 +46,5 @@ public class Course {
     public void setUni(String uni) {
         this.uni = uni;
     }  
-    
     
 }
