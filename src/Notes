@@ -23,6 +23,11 @@ D.Extracting course title
 	
 E.Extracting course numbers... (??)
 
+F.Words to be eliminated:
+
+	Stop Words-- a, the, of
+	{research, projects, labs, lab, laboratories, seminar}
+
 
 
 Additional: -->Linear notion of courses... as in prereq courses appear and are registered before advanced courses which need them...
@@ -53,3 +58,17 @@ http://www.college.columbia.edu/bulletin/depts/psych.php?tab=courses
 Problematic sites:
 http://www.catalog.gatech.edu/colleges/coc/ugrad/comsci/threads.php
 http://www.cs.wisc.edu/academic-programs/courses/current-classes
+
+//////////////////////////////////////////////////////
+
+Opennlp web page
+http://opennlp.apache.org
+
+Intro to Treebank Chunker
+http://danielmclaren.com/2007/05/11/getting-started-with-opennlp-natural-language-processing
+
+How to use Treebank Chunker
+http://www.mumuen.com/2010/04/opennlp-tools-treebankchunker-usage.html
+
+POS Tags
+http://blog.csdn.net/lovelytigerphd/article/details/5810151

@@ -6,6 +6,7 @@ public class Course {
     private String uni;
     private String desc;
     private List<Course> preReq;
+    private String title;
     
     public Course(String num, String uni, String desc, List preReq)
     {
@@ -14,6 +15,14 @@ public class Course {
         this.preReq=preReq;
         this.uni=uni;
     }
+    
+    public String getTitle() {
+		return title;
+	}
+    
+    public void setTitle(String title) {
+		this.title = title;
+	}
     
     public String getNum() {
         return num;

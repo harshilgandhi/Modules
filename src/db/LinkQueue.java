@@ -16,7 +16,7 @@ public class LinkQueue {
 			doc = Jsoup.connect(url).get();
 			links = new LinkedList<Element>(doc.select("a[href]"));
 		} catch (IOException e) {
-			System.err.println("Error while loading webpage with Jsoup.");
+			System.err.println("Error while loading webpage with Jsoup...");
 			e.printStackTrace();
 		}
 	}
