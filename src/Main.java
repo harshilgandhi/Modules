@@ -49,13 +49,13 @@ public class Main {
 			tdElements = htmlDoc.select("td");
 			liElements = htmlDoc.select("li");
 			htmlDocTxt = htmlDoc.toString();
-			
-			
-			
-			FindTagsElement findTagsObj = new FindTagsElement();
-		    ArrayList<String> divList = findTagsObj.find(inputUrls[ip],"div");
-		    ArrayList<String> aList = findTagsObj.find(inputUrls[ip],"a");
-		    ArrayList<String> plist=findTagsObj.find(inputUrls[ip],"p");
+
+                        
+                        
+//		    FindTagsElement findTagsObj = new FindTagsElement();
+//		    ArrayList<String> divList = findTagsObj.find(inputUrls[ip],"div");
+//		    ArrayList<String> aList = findTagsObj.find(inputUrls[ip],"a");
+//		    ArrayList<String> plist=findTagsObj.find(inputUrls[ip],"p");
 		                  
 	        ArrayList<String> listUsing=divList;
 	        ArrayList<String> titles=new ArrayList<String>();
