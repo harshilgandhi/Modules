@@ -2,20 +2,29 @@ import java.util.List;
 
 
 public class Course {
-    private String num;
+    private String id;
     private String uni;
     private String desc;
     private List<Course> preReq;
     private String title;
     
-    public Course(String num, String uni, String desc, List preReq)
+    public Course(String id, String uni, String desc, List preReq)
     {
         this.desc=desc;
-        this.num=num;
+        this.id=id;
         this.preReq=preReq;
         this.uni=uni;
     }
     
+    public Course(String id, String uni, String desc)
+    {
+        this.desc=desc;
+        this.id=id;
+        this.preReq=preReq;
+        this.uni=uni;
+    }
+   
+   
     public String getTitle() {
 		return title;
 	}
@@ -25,7 +34,7 @@ public class Course {
 	}
     
     public String getNum() {
-        return num;
+        return id;
     }
 
     public String getDesc() {
@@ -49,11 +58,18 @@ public class Course {
     }
 
     public void setNum(String num) {
-        this.num = num;
+        this.id = num;
     }
 
     public void setUni(String uni) {
         this.uni = uni;
-    }  
+    } 
+    
+    public String toString()
+    {
+        String a="Course ID: "+id+"\n";
+        String b="Course Description: "+this.desc;
+        return a+b;
+    }
     
 }
