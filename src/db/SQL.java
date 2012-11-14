@@ -45,7 +45,7 @@ public class SQL {
 		int newId = -1;
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			connect = DriverManager.getConnection("jdbc:mysql://localhost/Module?"+"user=moduleUser&password=module");
+			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","pass@123");
 			preparedStatement = connect.prepareStatement("insert into  Module.Documents values (default, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, url);
 			preparedStatement.setString(2, department);
@@ -68,7 +68,7 @@ public class SQL {
 	public void updateTerm(int id, String key, Integer value){
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			connect = DriverManager.getConnection("jdbc:mysql://localhost/Module?"+"user=moduleUser&password=module");    
+			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","pass@123");    
 			// PreparedStatements can use variables and are more efficient
 			preparedStatement = connect.prepareStatement("insert into  Module.Terms values (default, ?, ?, ?)");
 			preparedStatement.setInt(1, id);
@@ -87,7 +87,7 @@ public class SQL {
 	public void batchUpdate(int id, Hashtable<String, Integer> table) {
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			connect = DriverManager.getConnection("jdbc:mysql://localhost/Module?"+"user=moduleUser&password=module");    
+			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","pass@123");    
 			// PreparedStatements can use variables and are more efficient
 			preparedStatement = connect.prepareStatement("insert into  Module.Terms values (default, ?, ?, ?)");
 

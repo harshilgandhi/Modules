@@ -26,7 +26,7 @@ E.Extracting course numbers... (??)
 F.Words to be eliminated:
 
 	Stop Words-- a, the, of
-	{research, projects, labs, lab, laboratories, seminar, college, precollege, university, class, periods, professor, undergrad, undergraduate, grad, graduate, studies}
+	{research, projects, labs, lab, laboratories, seminar, college, precollege, university, class, periods, professor, undergrad, undergraduate, grad, graduate, studies, instructor, instructors}
 
 
 

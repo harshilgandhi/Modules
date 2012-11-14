@@ -2,7 +2,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +37,10 @@ public class Main {
 	private static Elements tdElements;
 	private static Elements liElements;
 	private static List<Course> courseList = new ArrayList<Course>();
-	private static List<Module> moduleList = new ArrayList<Module>();
+	private static Set<Module> moduleSet = new HashSet<Module>();
+	private static List<String> ignoreList = new ArrayList<String>();
+	private static Set<String> moduleNames = new HashSet<String>();
+	
 
 	public static int parallStruct(Elements blocks, int uni, Pattern pattern)
         {
@@ -101,10 +106,29 @@ public class Main {
         
         public static void main(String[] args) throws Exception {
 		
-		String[] inputUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
-		//DatabaseLookup dblookup = new DatabaseLookup();
+		
+        String[] ignoreWords = new String[] {"pre","geometry","algebra","assignment","assignments","design","unit","explore","selected","explores","engineering","management","method","specifications","specification","units","programs","implementations","implementation","future","program","emphasis","techniques","more","proofs","'","","fundamental","limited","part","media","scientific","experience","fundamentals","topic","level","levels","topics","knowledge","s","campus","campuses","","fee","fees","none","laboratory","familiar","familiarity","use","books","prior","standard","recommended","book","area","quarter","semester",",","form","learn","learns","good","aka","floor","building","bldg","understanding","problem","problems","topic","student","students","standing","cs","cse","main","principle","principles","same","similar","cheap","math","maths","mathematics","practice","computer","computers","science","sciences","small","study","areas","or","  ","   ","un","cases","case","both","\\/","enrollment","an","sophomore","junior","senior","several","various","freshman","corequisite","corequisites","example","examples","preparation"," ","","do","to","a","no","pc","library","libraries","credit","high-school","high","co-requisites","co-requisite","corequisites","school","high-schools","schools","credits","course","courses","pre-requisite","pre-requisites","prerequisite","prerequisites","concept","concepts","basic","introduce","introduces","skill","skills","practical","research", "projects", "labs", "lab", "laboratories", "seminar", "college", "precollege", "university", "class", "periods", "professor", "professors","undergrad", "undergraduate", "grad", "graduate", "studies", "instructor", "instructors","consent","able","about","across","after","all","almost","also","among","even","better","and","any","are","because","been","so","few","but","can","cannot","further","make","makes","many","ahead","could","dear","did","does","either","else","ever","every","for","from","get","got","had","has","have","her","hers","him","his","how","however","into","its","just","least","let","like","likely","may","might","in","on","most","must","neither","nor","not","off","often","only","our","own","other","say","says","she","the","rather","said","says","should","since","some","than","that","their","them","then","there","was","who","yet","you","why","these","they","this","twas","wants","were","what","when","where","which","while","whom","will","with","would","your","even"};	
+        for(int i = 0; i < ignoreWords.length; i ++)
+        {
+        	ignoreList.add(ignoreWords[i]);
+        }	
+        	
+        	
+        	
+        	
+        	
+        	
+        String[] inputUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html", "http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html"};
+		WikiBingTester wbtester = new WikiBingTester();
+		DatabaseLookup dblookup = new DatabaseLookup();
+		NlpParser nlpParser = new NlpParser();
+		
+		System.out.println("PARSING STARTED...");
+		
 		for(int ip = 0; ip < inputUrls.length; ip ++)
 		{
+			System.out.println("STILL PARSING...");
+			
 			String inputUrl = inputUrls[ip];
 			Document htmlDoc = Jsoup.connect(inputUrl).get();
                         String regex1="(^[A-Z]{2,6}\\s?[a-zA-Z]?[0-9]{1,4}[a-zA-Z]?\\b)";
@@ -186,29 +210,100 @@ public class Main {
                             parallStruct(foundBlocks,ip,pattern);
                         }
                                
-                       
+                              
                 }
-                
-                
+                System.out.println("CREATING COURSES DONE...");
+		
+                System.out.println("STARTED MODULE FINDING...");
+				for(Course currentCourse : courseList)
+				{
+					String a=currentCourse.getDesc();
+					System.out.println(a);
+					List<String> potentialModules = nlpParser.getPotentialModules(a);
+					boolean isModule = true;
+					int isConsidered = 0;
+					boolean oneWord = false;
+					for(String currentModule : potentialModules)//FIRST DATABASE LOOKUP
+					{
+						System.out.println("...");
+						isModule = true;
+						isConsidered = 0;
+						oneWord = false;
+						String[] moduleWords = currentModule.split(" ");
+						for(int i = 0; i < moduleWords.length; i ++)
+						{
+							moduleWords[i] = moduleWords[i].toLowerCase();
+							for(int k = 0; k < moduleWords[i].length(); k ++)
+							{
+								if(!Character.isLetter(moduleWords[i].charAt(k)))
+									break;
+							}
+							if(!ignoreList.contains(moduleWords[i]))
+							{
+								isConsidered ++;
+								
+								System.out.println("imp word........................"+moduleWords[i]);
+								int wc = dblookup.getWordCount(moduleWords[i], "ComputerScience");
+								int df = dblookup.getWordDocFreq(moduleWords[i], "ComputerScience");
+								if(wc <= 10 || df <= 5)
+								{
+									isModule = false;
+								}
+								if(wc > 32 && !isModule)
+								{
+									isModule = true;
+								}
+								if(df > 12 && !isModule && wc < 32)
+								{
+									isModule = true;
+								}
+								if(moduleWords.length == 2)
+								{
+									if(wc < 50)
+										isModule = true;
+									if(wc > 50)
+										isModule = false;
+									if(df > 16)
+										isModule = false;
+									oneWord = true;
+								}
+							}
+						}
+						if(isModule && (double)((double)isConsidered / (double)moduleWords.length) >= 0.5)
+						{
+							if(!moduleNames.contains(currentModule))
+							{
+								Module module = new Module();
+								module.setName(currentModule);
+								moduleSet.add(module);
+								if(oneWord)
+									System.out.println("ADDED MODULE==============ONE=WORD================>" + currentModule);
+								else
+									System.out.println("ADDED MODULE======================================>" + currentModule);
+							}
+						}
+					}
+				}
                
-                
+				System.out.println("PRINTING MODULES...");
                 //print out the results for debugging
-                for(Course c: courseList)
-                {
-                    System.out.println(c);
-                }
+				for(Module currentModule : moduleSet)
+				{
+					currentModule.toString();
+				}
+				
+//                for(Course c: courseList)
+//                {
+//                    System.out.println(c);
+//                }
                 
-                
-                
-                
-                
-                        
-
-	
-	
-	
-		
-		
+				
+				//DEPENDENCIES
+				for(Course currentCourse : courseList)
+				{
+					
+				}
+				
 		
 //		String[] inputUrls = new String[] {"http://www.cms.caltech.edu/academics/course_desc"};
 //		
