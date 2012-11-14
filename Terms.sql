@@ -1,8 +1,4 @@
--- MySQL dump 10.13  Distrib 5.5.28, for debian-linux-gnu (i686)
---
--- Host: localhost    Database: Module
--- ------------------------------------------------------
--- Server version	5.5.28-0ubuntu0.12.04.2
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
