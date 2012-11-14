@@ -102,7 +102,7 @@ public class Main {
         public static void main(String[] args) throws Exception {
 		
 		String[] inputUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
-		
+		DatabaseLookup dblookup = new DatabaseLookup();
 		for(int ip = 0; ip < inputUrls.length; ip ++)
 		{
 			String inputUrl = inputUrls[ip];
@@ -203,17 +203,38 @@ public class Main {
                 
                 
                         
+
+	
+	
+	
+		
+		
+		
+//		String[] inputUrls = new String[] {"http://www.cms.caltech.edu/academics/course_desc"};
+//		
+//		for(int ip = 0; ip < inputUrls.length; ip ++)
+//		{
+//			String inputUrl = inputUrls[ip];
+//			Document htmlDoc = Jsoup.connect(inputUrl).get();
+
 //			aElements = htmlDoc.select("a");
 //			pElements = htmlDoc.select("p");
 //			divElements = htmlDoc.select("div");
 //			trElements = htmlDoc.select("tr");
 //			tdElements = htmlDoc.select("td");
 //			liElements = htmlDoc.select("li");
-			//htmlDocTxt = htmlDoc.toString();
+                	//htmlDocTxt = htmlDoc.toString();
                 
                         
                         
 //		    FindTagsElement findTagsObj = new FindTagsElement();
+
+//			htmlDocTxt = htmlDoc.toString();
+//			
+//			
+//			
+//			FindTagsElement findTagsObj = new FindTagsElement();
+
 //		    ArrayList<String> divList = findTagsObj.find(inputUrls[ip],"div");
 //		    ArrayList<String> aList = findTagsObj.find(inputUrls[ip],"a");
 //		    ArrayList<String> plist=findTagsObj.find(inputUrls[ip],"p");
