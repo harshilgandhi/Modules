@@ -6,11 +6,11 @@ public class Course {
     private String id;
     private String uni;
     private String desc;
-    private List<Course> preReq;
+    private ArrayList<String> preReq;
     private String title;
     List<String> phrases = new ArrayList<String>();
     
-    public Course(String num, String uni, String desc, List preReq)
+    public Course(String num, String uni, String desc, ArrayList<String> preReq)
     {
         this.desc=desc;
         this.id=num;
@@ -53,11 +53,11 @@ public class Course {
         return uni;
     }
 
-    public List<Course> getPreReq() {
+    public ArrayList<String> getPreReq() {
         return preReq;
     }
 
-    public void setPreReq(List<Course> preReq) {
+    public void setPreReq(ArrayList<String> preReq) {
         this.preReq = preReq;
     } 
 
@@ -76,8 +76,9 @@ public class Course {
     public String toString()
     {
         String a="Course ID: "+id+"\n";
-        String b="Course Description: "+this.desc;
-        return a+b;
+        String b="Course Description: "+this.desc+"\n";
+        String c="Prereq: "+preReq.toString();
+        return a+b+c;
     }
     
 }

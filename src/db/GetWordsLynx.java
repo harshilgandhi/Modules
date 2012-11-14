@@ -14,7 +14,7 @@ public class GetWordsLynx {
 
         try {
         	
-            String cmdline[] = {"/usr/bin/lynx", "--dump", url };
+            String cmdline[] = {"/opt/local/bin", "--dump", url };
             Process p = Runtime.getRuntime().exec(cmdline);
             BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
