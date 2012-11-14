@@ -3,7 +3,7 @@ import java.util.List;
 
 
 public class Course {
-    private String num;
+    private String id;
     private String uni;
     private String desc;
     private List<Course> preReq;
@@ -13,8 +13,15 @@ public class Course {
     public Course(String num, String uni, String desc, List preReq)
     {
         this.desc=desc;
-        this.num=num;
+        this.id=num;
         this.preReq=preReq;
+        this.uni=uni;
+    }
+    
+    public Course(String num, String uni, String desc)
+    {
+        this.desc=desc;
+        this.id=num;
         this.uni=uni;
     }
     
@@ -35,7 +42,7 @@ public class Course {
 	}
     
     public String getNum() {
-        return num;
+        return id;
     }
 
     public String getDesc() {
@@ -59,7 +66,7 @@ public class Course {
     }
 
     public void setNum(String num) {
-        this.num = num;
+        this.id = num;
     }
 
     public void setUni(String uni) {
