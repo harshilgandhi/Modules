@@ -36,15 +36,7 @@ public class Main {
 	private static Elements liElements;
 	private static List<Course> courseList = new ArrayList<Course>();
 	private static List<Module> moduleList = new ArrayList<Module>();
-	
-<<<<<<< HEAD
-	
-	
-	public static void main(String[] args) throws Exception {
-		
-		DatabaseLookup dblookup = new DatabaseLookup();
-		
-=======
+
 	public static int parallStruct(Elements blocks, int uni, Pattern pattern)
         {
             for(Element e : blocks)
@@ -218,41 +210,33 @@ public class Main {
 		
 		
 		
->>>>>>> current-working-branch
 //		String[] inputUrls = new String[] {"http://www.cms.caltech.edu/academics/course_desc"};
 //		
 //		for(int ip = 0; ip < inputUrls.length; ip ++)
 //		{
 //			String inputUrl = inputUrls[ip];
 //			Document htmlDoc = Jsoup.connect(inputUrl).get();
-<<<<<<< HEAD
-=======
 
->>>>>>> current-working-branch
 //			aElements = htmlDoc.select("a");
 //			pElements = htmlDoc.select("p");
 //			divElements = htmlDoc.select("div");
 //			trElements = htmlDoc.select("tr");
 //			tdElements = htmlDoc.select("td");
 //			liElements = htmlDoc.select("li");
-<<<<<<< HEAD
-=======
+
                 	//htmlDocTxt = htmlDoc.toString();
                 
                         
                         
 //		    FindTagsElement findTagsObj = new FindTagsElement();
 
->>>>>>> current-working-branch
+
 //			htmlDocTxt = htmlDoc.toString();
 //			
 //			
 //			
 //			FindTagsElement findTagsObj = new FindTagsElement();
-<<<<<<< HEAD
-=======
 
->>>>>>> current-working-branch
 //		    ArrayList<String> divList = findTagsObj.find(inputUrls[ip],"div");
 //		    ArrayList<String> aList = findTagsObj.find(inputUrls[ip],"a");
 //		    ArrayList<String> plist=findTagsObj.find(inputUrls[ip],"p");
