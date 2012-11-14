@@ -9,6 +9,7 @@ public class Course {
     private ArrayList<String> preReq;
     private String title;
     List<String> phrases = new ArrayList<String>();
+    private List<Module> modules = new ArrayList<Module>();
     
     public Course(String num, String uni, String desc, ArrayList<String> preReq)
     {
@@ -17,6 +18,14 @@ public class Course {
         this.preReq=preReq;
         this.uni=uni;
     }
+    
+    public List<Module> getModules() {
+		return modules;
+	}
+    
+    public void setModules(List<Module> modules) {
+		this.modules = modules;
+	}
     
     public Course(String num, String uni, String desc)
     {

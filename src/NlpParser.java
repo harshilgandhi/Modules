@@ -31,8 +31,10 @@ public class NlpParser {
 		List<String> returnList = new ArrayList<String>();
 		List<String> realReturnList = new ArrayList<String>();
 		List<String> finalReturnList = new ArrayList<String>();
+		Main.countDescParsed ++;
+	    System.out.println(Main.countDescParsed);
 		
-	    Tree parse = lexParser.apply(inputSentences);
+		Tree parse = lexParser.apply(inputSentences);
 	    
 //	    System.out.println(treeGraph.getNodeByIndex(11).toString());
 //	    System.out.println(treeGraph.getNodeByIndex(3).pennString());

@@ -3,8 +3,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,10 +23,11 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	private static String[] inputDescUrls = new String[] {"http://www.cs.brown.edu/courses/"};
-        private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
-    
-        private static boolean debug = true;
+	private static String[] inputDescUrls = new String[] {"http://www.cs.umass.edu/ugrad-education/fall-12-course-descriptions"};
+    private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
+    private static String[] inputUrls=inputDescUrls;
+    private static boolean usingLinks=false;
+    private static boolean debug = true;
 	private static URL url;
 	private static URLConnection urlConnection;
 	private static InputStream inputStream;
@@ -43,10 +47,11 @@ public class Main {
 	private static Elements trElements;
 	private static Elements tdElements;
 	private static Elements liElements;
-	private static List<Course> courseList = new ArrayList<Course>();
 	private static Set<Module> moduleSet = new HashSet<Module>();
 	private static List<String> ignoreList = new ArrayList<String>();
 	private static Set<String> moduleNames = new HashSet<String>();
+	private static HashMap<String, Course> courseList = new HashMap<String, Course>();
+	public static int countDescParsed = 0;
 	
 
 	public static int parallStruct(Elements blocks, int uni, Pattern pattern, int pIndex, Pattern[] pPreSets)
@@ -105,7 +110,7 @@ public class Main {
                     ArrayList<String> preReq=new ArrayList<String>();
                     findPrereqInDesc(desc, pIndex, pPreSets, preReq);
                     Course newCourse=new Course(id,String.valueOf(uni),desc,preReq);
-                    courseList.add(newCourse);
+                    courseList.put(id, newCourse);
                 }                                        
             }
             
@@ -262,8 +267,8 @@ public class Main {
                                             }
                                         }
                                         Course newCourse=new Course(id,String.valueOf(ip),desc,preReq);
-                          
-                                        courseList.add(newCourse);
+                                        
+                                        courseList.put(id, newCourse);
                                         
                                     }
                                     else
@@ -290,7 +295,7 @@ public class Main {
 		
 
 		
-        String[] ignoreWords = new String[] {"pre","geometry","algebra","assignment","assignments","design","unit","explore","selected","explores","engineering","management","method","specifications","specification","units","programs","implementations","implementation","future","program","emphasis","techniques","more","proofs","'","","fundamental","limited","part","media","scientific","experience","fundamentals","topic","level","levels","topics","knowledge","s","campus","campuses","","fee","fees","none","laboratory","familiar","familiarity","use","books","prior","standard","recommended","book","area","quarter","semester",",","form","learn","learns","good","aka","floor","building","bldg","understanding","problem","problems","topic","student","students","standing","cs","cse","main","principle","principles","same","similar","cheap","math","maths","mathematics","practice","computer","computers","science","sciences","small","study","areas","or","  ","   ","un","cases","case","both","\\/","enrollment","an","sophomore","junior","senior","several","various","freshman","corequisite","corequisites","example","examples","preparation"," ","","do","to","a","no","pc","library","libraries","credit","high-school","high","co-requisites","co-requisite","corequisites","school","high-schools","schools","credits","course","courses","pre-requisite","pre-requisites","prerequisite","prerequisites","concept","concepts","basic","introduce","introduces","skill","skills","practical","research", "projects", "labs", "lab", "laboratories", "seminar", "college", "precollege", "university", "class", "periods", "professor", "professors","undergrad", "undergraduate", "grad", "graduate", "studies", "instructor", "instructors","consent","able","about","across","after","all","almost","also","among","even","better","and","any","are","because","been","so","few","but","can","cannot","further","make","makes","many","ahead","could","dear","did","does","either","else","ever","every","for","from","get","got","had","has","have","her","hers","him","his","how","however","into","its","just","least","let","like","likely","may","might","in","on","most","must","neither","nor","not","off","often","only","our","own","other","say","says","she","the","rather","said","says","should","since","some","than","that","their","them","then","there","was","who","yet","you","why","these","they","this","twas","wants","were","what","when","where","which","while","whom","will","with","would","your","even"};	
+        String[] ignoreWords = new String[] {"pre","homework","homeworks","","geometry","algebra","assignment","assignments","design","unit","explore","selected","explores","engineering","management","method","specifications","specification","units","programs","implementations","implementation","future","program","emphasis","techniques","more","proofs","'","","fundamental","limited","part","media","scientific","experience","fundamentals","topic","level","levels","topics","knowledge","s","campus","campuses","","fee","fees","none","laboratory","familiar","familiarity","use","books","prior","standard","recommended","book","area","quarter","semester",",","form","learn","learns","good","aka","floor","building","bldg","understanding","problem","problems","topic","student","students","standing","cs","cse","main","principle","principles","same","similar","cheap","math","maths","mathematics","practice","computer","computers","science","sciences","small","study","areas","or","  ","   ","un","cases","case","both","\\/","enrollment","an","sophomore","junior","senior","several","various","freshman","corequisite","corequisites","example","examples","preparation"," ","","do","to","a","no","pc","library","libraries","credit","high-school","high","co-requisites","co-requisite","corequisites","school","high-schools","schools","credits","course","courses","pre-requisite","pre-requisites","prerequisite","prerequisites","concept","concepts","basic","introduce","current","other","others","whose","introduces","skill","skills","practical","research", "projects", "labs", "lab", "laboratories", "seminar", "college", "precollege", "university", "class", "periods", "professor", "professors","undergrad", "undergraduate", "grad", "graduate", "studies", "instructor", "instructors","consent","able","about","across","after","all","almost","also","among","even","better","and","any","are","because","been","so","few","but","can","cannot","further","make","makes","many","ahead","could","dear","did","does","either","else","ever","every","for","from","get","got","had","has","have","her","hers","him","his","how","however","into","its","just","least","let","like","likely","may","might","in","on","most","must","neither","nor","not","off","often","only","our","own","other","say","says","she","the","rather","said","says","should","since","some","than","that","their","them","then","there","was","who","yet","you","why","these","they","this","twas","wants","were","what","when","where","which","while","whom","will","with","would","your","even"};	
         for(int i = 0; i < ignoreWords.length; i ++)
         {
         	ignoreList.add(ignoreWords[i]);
@@ -303,16 +308,13 @@ public class Main {
 		System.out.println("PARSING STARTED...");
 		
 	
-                String[] inputUrls=inputLinkUrls;
-                boolean usingLinks=true;
                 
 		//DatabaseLookup dblookup = new DatabaseLookup();
 		for(int ip = 0; ip < inputUrls.length; ip ++)
 		{
 			System.out.println("STILL PARSING...");
 			
-			String inputUrl = inputUrls[ip];
-			Document htmlDoc = Jsoup.connect(inputUrl).get();
+			Document htmlDoc = Jsoup.connect(inputUrls[ip]).get();
                         String regex1="(^[A-Z]{2,6}\\s?[a-zA-Z]?[0-9]{1,5}-?[a-zA-Z]{0,2}\\b)";
                         String regex2="(^[0-9]{2,4}[a-zA-Z]\\b)";
                         String regex3="(^Computer\\sScience\\s[0-9]{2,4}\\b)";
@@ -392,7 +394,7 @@ public class Main {
     //                                    
     //                                }
                                     Course newCourse=new Course(id,String.valueOf(ip),desc,preReq);
-                                    courseList.add(newCourse);
+                                    courseList.put(id, newCourse);
                                 }                                        
                                 }
                                 if(courseList.size()<10) //if dont get enough course, try another approach
@@ -402,7 +404,7 @@ public class Main {
                         }
                         else
                         {                     
-                            linkStruct(foundBlocks,ip,pattern,pIndex,pPreSets,htmlDoc,inputUrl);
+                            linkStruct(foundBlocks,ip,pattern,pIndex,pPreSets,htmlDoc,inputUrls[ip]);
                             
                         }     
                 }
@@ -411,20 +413,19 @@ public class Main {
                 System.out.println("CREATING COURSES DONE...");
 		
                 System.out.println("STARTED MODULE FINDING...");
-				for(Course currentCourse : courseList)
+                Iterator<Entry<String, Course>> iterator = courseList.entrySet().iterator();
+				while(iterator.hasNext())
 				{
-					String a=currentCourse.getDesc();
+					String a=courseList.get(iterator.next().getKey()).getDesc();
 					System.out.println(a);
 					List<String> potentialModules = nlpParser.getPotentialModules(a);
 					boolean isModule = true;
 					int isConsidered = 0;
-					boolean oneWord = false;
 					for(String currentModule : potentialModules)//FIRST DATABASE LOOKUP
 					{
 						System.out.println("...");
 						isModule = true;
 						isConsidered = 0;
-						oneWord = false;
 						String[] moduleWords = currentModule.split(" ");
 						for(int i = 0; i < moduleWords.length; i ++)
 						{
@@ -461,7 +462,6 @@ public class Main {
 										isModule = false;
 									if(df > 16)
 										isModule = false;
-									oneWord = true;
 								}
 							}
 						}
@@ -472,22 +472,12 @@ public class Main {
 								Module module = new Module();
 								module.setName(currentModule);
 								moduleSet.add(module);
-								if(oneWord)
-									System.out.println("ADDED MODULE==============ONE=WORD================>" + currentModule);
-								else
-									System.out.println("ADDED MODULE======================================>" + currentModule);
+								System.out.println("ADDED MODULE======================================>" + currentModule);
 							}
 						}
 					}
 				}
                
-				System.out.println("PRINTING MODULES...");
-                //print out the results for debugging
-				for(Module currentModule : moduleSet)
-				{
-					currentModule.toString();
-				}
-				
 //                for(Course c: courseList)
 //                {
 //                    System.out.println(c);
@@ -495,11 +485,56 @@ public class Main {
                 
 				
 				//DEPENDENCIES
-				for(Course currentCourse : courseList)
+				Iterator<Entry<String, Course>> iterator2 = courseList.entrySet().iterator();
+				while(iterator2.hasNext())
 				{
-					
+					Course currentCourse=courseList.get(iterator2.next().getKey());
+					ArrayList<String> preIDs=currentCourse.getPreReq();
+					ArrayList<Module> allPrereqModules=new ArrayList<Module>();
+					ArrayList<Integer> tempIdList = new ArrayList<Integer>();
+					ArrayList<Integer> tempCountList = new ArrayList<Integer>();
+					for(String preID: preIDs)
+					{
+						allPrereqModules.addAll(courseList.get(preID).getModules());
+						for(int i = 0; i < allPrereqModules.size(); i ++)
+						{
+							if(tempIdList.contains(allPrereqModules.get(i).getId()))
+							{
+								int index = tempIdList.indexOf(allPrereqModules.get(i).getId());
+								tempCountList.set(index, tempCountList.get(index)+1);
+							}
+							else
+							{
+								tempIdList.add(allPrereqModules.get(i).getId());
+								int index = tempIdList.indexOf(allPrereqModules.get(i).getId());
+								tempCountList.set(index, 1);
+							}
+						}
+					}
+					sortTempArrays(tempCountList, tempIdList);
+					Iterator it = moduleSet.iterator();
+					ArrayList<Integer> realTop2Prereq=new ArrayList<Integer>();
+					realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
+					realTop2Prereq.add(tempIdList.get(tempIdList.size()-2));
+					for(Module m : currentCourse.getModules())
+					{
+						m.setPreReqModulesId(realTop2Prereq);
+					}
 				}
-				
+
+				System.out.println("PRINTING MODULES AND THEIR DEPENDENCIES...");
+                //print out the results for debugging
+				for(Module currentModule : moduleSet)
+				{
+					currentModule.toString();
+					if(currentModule.getPreReq()==null)
+						System.out.println("No Pre-requisites found for this Module");
+					else if(currentModule.getPreReq().size()==2)
+						System.out.println("Dependency --> " + currentModule.getPreReq().get(0) + ", " + currentModule.getPreReq().get(1));
+					else
+						System.out.println("Dependency --> " + currentModule.getPreReq().get(0));
+				}
+			Digraph digraph = new Digraph();	
 		
 //		String[] inputUrls = new String[] {"http://www.cms.caltech.edu/academics/course_desc"};
 //		
@@ -603,6 +638,69 @@ public class Main {
 	}
 
    
+	public static void sortTempArrays(ArrayList<Integer> tempCountList, ArrayList<Integer> tempIdList)
+	{
+		sort(tempCountList, tempIdList);
+	}
+	
+	 public static void sort(List<Integer> listCount, List<Integer> listId) {
+
+		    quicksort(0, listCount.size() - 1, listCount, listId);
+		  }
+		  
+		  private static void quicksort(int low, int high, List<Integer> listCount, List<Integer> listId) {
+		    int i = low, j = high;
+		    // Get the pivot element from the middle of the list
+		    int pivot = listCount.get(low + (high-low)/2);//numbers[low + (high-low)/2];
+
+		    // Divide into two lists
+		    while (i <= j) {
+		      // If the current value from the left list is smaller then the pivot
+		      // element then get the next element from the left list
+		      while (listCount.get(i) < pivot)//(numbers[i] < pivot)
+		      {
+		        i++;
+		      }
+		      // If the current value from the right list is larger then the pivot
+		      // element then get the next element from the right list
+		      while (listCount.get(j) > pivot)//(numbers[j] > pivot)
+		      {
+		        j--;
+		      }
+
+		      // If we have found a values in the left list which is larger then
+		      // the pivot element and if we have found a value in the right list
+		      // which is smaller then the pivot element then we exchange the
+		      // values.
+		      // As we are done we can increase i and j
+		      if (i <= j) {
+		        exchange(i, j, listCount, listId);
+		        i++;
+		        j--;
+		      }
+		    }
+		    // Recursion
+		    if (low < j)
+		      quicksort(low, j, listCount, listId);
+		    if (i < high)
+		      quicksort(i, high, listCount, listId);
+		  }
+
+		  private static void exchange(int i, int j, List<Integer> listCount, List<Integer> listId) {
+			//numbers[i];
+			int temp = listCount.get(i);
+		    //numbers[i] = numbers[j];
+		    listCount.set(i, listCount.get(j));
+			//numbers[j] = temp;
+		    listCount.set(j, temp);
+		    
+			//numbers[i];
+			int temp2 = listId.get(i);
+		    //numbers[i] = numbers[j];
+		    listId.set(i, listId.get(j));
+			//numbers[j] = temp;
+		    listId.set(j, temp2);
+		  }
 }
 	
 
