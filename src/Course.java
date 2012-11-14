@@ -73,4 +73,11 @@ public class Course {
         this.uni = uni;
     }  
     
+    public String toString()
+    {
+        String a="Course ID: "+id+"\n";
+        String b="Course Description: "+this.desc;
+        return a+b;
+    }
+    
 }

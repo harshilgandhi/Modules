@@ -102,7 +102,7 @@ public class Main {
         public static void main(String[] args) throws Exception {
 		
 		String[] inputUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
-		DatabaseLookup dblookup = new DatabaseLookup();
+		//DatabaseLookup dblookup = new DatabaseLookup();
 		for(int ip = 0; ip < inputUrls.length; ip ++)
 		{
 			String inputUrl = inputUrls[ip];
