@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -7,6 +8,7 @@ public class Course {
     private String desc;
     private List<Course> preReq;
     private String title;
+    List<String> phrases = new ArrayList<String>();
     
     public Course(String num, String uni, String desc, List preReq)
     {
@@ -15,6 +17,14 @@ public class Course {
         this.preReq=preReq;
         this.uni=uni;
     }
+    
+    public List<String> getPhrases() {
+		return phrases;
+	}
+    
+    public void setPhrases(List<String> phrases) {
+		this.phrases = phrases;
+	}
     
     public String getTitle() {
 		return title;
