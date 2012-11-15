@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -7,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -23,7 +26,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	private static String[] inputDescUrls = new String[] {"http://www.cs.umass.edu/ugrad-education/fall-12-course-descriptions"};
+	private static String[] inputDescUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
     private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
     private static String[] inputUrls=inputDescUrls;
     private static boolean usingLinks=false;
@@ -414,13 +417,23 @@ public class Main {
 		
                 System.out.println("STARTED MODULE FINDING...");
                 Iterator<Entry<String, Course>> iterator = courseList.entrySet().iterator();
-				while(iterator.hasNext())
+                System.err.println();
+                Course thisCourse = null;
+                int courseCount = 0;
+				while(iterator.hasNext())// && courseCount < 2)
 				{
-					String a=courseList.get(iterator.next().getKey()).getDesc();
+					String a=(thisCourse = courseList.get(iterator.next().getKey())).getDesc();
 					System.out.println(a);
+					if(thisCourse.getPreReq().size() == 0)
+					{
+						continue;
+					}
+					courseCount ++;
 					List<String> potentialModules = nlpParser.getPotentialModules(a);
 					boolean isModule = true;
 					int isConsidered = 0;
+					boolean isDigit = false;
+					int wc=0,df=0;
 					for(String currentModule : potentialModules)//FIRST DATABASE LOOKUP
 					{
 						System.out.println("...");
@@ -429,34 +442,37 @@ public class Main {
 						String[] moduleWords = currentModule.split(" ");
 						for(int i = 0; i < moduleWords.length; i ++)
 						{
+							isDigit = false;
 							moduleWords[i] = moduleWords[i].toLowerCase();
 							for(int k = 0; k < moduleWords[i].length(); k ++)
 							{
 								if(!Character.isLetter(moduleWords[i].charAt(k)))
-									break;
+									isDigit = true;
 							}
+							if(isDigit)
+								continue;
 							if(!ignoreList.contains(moduleWords[i]))
 							{
 								isConsidered ++;
 								
 								System.out.println("imp word........................"+moduleWords[i]);
-								int wc = dblookup.getWordCount(moduleWords[i], "ComputerScience");
-								int df = dblookup.getWordDocFreq(moduleWords[i], "ComputerScience");
-								if(wc <= 10 || df <= 5)
+								wc += dblookup.getWordCount(moduleWords[i], "ComputerScience");
+								df += dblookup.getWordDocFreq(moduleWords[i], "ComputerScience");
+								if(wc <= 12 || df <= 8)
 								{
 									isModule = false;
 								}
-								if(wc > 32 && !isModule)
+								if(wc > 32)
 								{
 									isModule = true;
 								}
-								if(df > 12 && !isModule && wc < 32)
+								if(df > 12 && wc < 32)
 								{
 									isModule = true;
 								}
 								if(moduleWords.length == 2)
 								{
-									if(wc < 50)
+									if(wc < 50 && df > 5)
 										isModule = true;
 									if(wc > 50)
 										isModule = false;
@@ -472,6 +488,7 @@ public class Main {
 								Module module = new Module();
 								module.setName(currentModule);
 								moduleSet.add(module);
+								moduleNames.add(module.getName());
 								System.out.println("ADDED MODULE======================================>" + currentModule);
 							}
 						}
@@ -482,8 +499,36 @@ public class Main {
 //                {
 //                    System.out.println(c);
 //                }
-                
-				
+                //CACHING...
+				String fileName = "coursecache.txt";
+			    File f = new File(fileName);
+			    try {
+			      FileWriter w = new FileWriter(fileName);
+			      Iterator<Entry<String, Course>> iterator2 = courseList.entrySet().iterator();
+					while(iterator2.hasNext())
+					{
+						Course currentCourse=courseList.get(iterator2.next().getKey());
+						w.write(currentCourse.getNum() + "---" + currentCourse.getDesc() + "---");
+						for(Module m : currentCourse.getModules())
+						{
+							w.write(m.getId() + "---" + m.getName() + "---" + m.getPreReqModulesId().toArray().toString() + "\n");
+							
+						}
+						w.write("EOC");
+					}
+			    }
+			    catch(Exception e)
+			    {
+			    	e.printStackTrace();
+			    }
+				//CACHING ENDS
+			    
+			    
+			    //READ FROM CACHE
+//			    CacheReader.getCourseList();
+			    //READING ENDS
+			    
+			    
 				//DEPENDENCIES
 				Iterator<Entry<String, Course>> iterator2 = courseList.entrySet().iterator();
 				while(iterator2.hasNext())
@@ -495,6 +540,8 @@ public class Main {
 					ArrayList<Integer> tempCountList = new ArrayList<Integer>();
 					for(String preID: preIDs)
 					{
+						if(courseList.get(preID) == null)
+							continue;
 						allPrereqModules.addAll(courseList.get(preID).getModules());
 						for(int i = 0; i < allPrereqModules.size(); i ++)
 						{
@@ -511,14 +558,17 @@ public class Main {
 							}
 						}
 					}
-					sortTempArrays(tempCountList, tempIdList);
-					Iterator it = moduleSet.iterator();
-					ArrayList<Integer> realTop2Prereq=new ArrayList<Integer>();
-					realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
-					realTop2Prereq.add(tempIdList.get(tempIdList.size()-2));
-					for(Module m : currentCourse.getModules())
+					if(tempCountList.size() > 0)
 					{
-						m.setPreReqModulesId(realTop2Prereq);
+						sortTempArrays(tempCountList, tempIdList);
+//					Iterator it = moduleSet.iterator();
+						ArrayList<Integer> realTop2Prereq=new ArrayList<Integer>();
+						realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
+						realTop2Prereq.add(tempIdList.get(tempIdList.size()-2));
+						for(Module m : currentCourse.getModules())
+						{
+							m.setPreReqModulesId(realTop2Prereq);
+						}
 					}
 				}
 
@@ -527,14 +577,14 @@ public class Main {
 				for(Module currentModule : moduleSet)
 				{
 					currentModule.toString();
-					if(currentModule.getPreReq()==null)
+					if(currentModule.getPreReqModulesId()==null)
 						System.out.println("No Pre-requisites found for this Module");
-					else if(currentModule.getPreReq().size()==2)
-						System.out.println("Dependency --> " + currentModule.getPreReq().get(0) + ", " + currentModule.getPreReq().get(1));
+					else if(currentModule.getPreReqModulesId().size()==2)
+						System.out.println("Dependency --> " + currentModule.getPreReqModulesId().get(0) + ", " + currentModule.getPreReqModulesId().get(1));
 					else
-						System.out.println("Dependency --> " + currentModule.getPreReq().get(0));
+						System.out.println("Dependency --> " + currentModule.getPreReqModulesId().get(0));
 				}
-			Digraph digraph = new Digraph();	
+			Digraph.DigraphToFile("g5-cs", moduleSet);
 		
 //		String[] inputUrls = new String[] {"http://www.cms.caltech.edu/academics/course_desc"};
 //		
