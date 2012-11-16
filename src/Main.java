@@ -474,17 +474,15 @@ public class Main {
 								System.out.println("imp word........................"+moduleWords[i]);
 								wc += dblookup.getWordCount(moduleWords[i], "ComputerScience");
 								df += dblookup.getWordDocFreq(moduleWords[i], "ComputerScience");
-								wc *= (3/5);
-								df *= (3/5);
 								if(wc <= 12 || df <= 8)
 								{
 									isModule = false;
 								}
-								if(wc > 50)
+								if(wc > 32)
 								{
 									isModule = true;
 								}
-								if(df > moduleWords.length * 12 && wc < 32)
+								if(df > 12 && wc < 32)
 								{
 									isModule = true;
 								}
