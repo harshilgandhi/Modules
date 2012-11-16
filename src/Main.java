@@ -326,7 +326,7 @@ public class Main {
 		
 
 		
-        String[] ignoreWords = new String[] {"pre","curriculum","lower","bound","relate","related","task","tasks","both","attention","member","exact","faculty","members","recent","developments","faculties","description","formal","focuses","focus","competition","competitions","hostile","candidates","candidacy","introductory","course","courses","candidate","lectures","uses","use","modern","schemes","scheme","elementary","proof","hour","hours","lecture","homework","curiculum","homeworks","teaching","assistant","assistants","","geometry","algebra","assignment","assignments","design","unit","explore","selected","explores","engineering","management","method","specifications","specification","units","programs","implementations","implementation","future","program","emphasis","techniques","more","proofs","'","","fundamental","limited","part","media","scientific","experience","fundamentals","topic","level","levels","topics","knowledge","s","campus","campuses","","fee","fees","none","laboratory","familiar","familiarity","use","books","prior","standard","recommended","book","area","quarter","semester",",","form","learn","learns","good","aka","floor","building","bldg","understanding","problem","problems","topic","student","students","standing","cs","cse","main","principle","principles","same","similar","cheap","math","maths","mathematics","practice","computer","computers","science","sciences","small","study","areas","or","  ","   ","un","cases","case","both","\\/","enrollment","an","sophomore","junior","senior","several","various","freshman","corequisite","corequisites","example","examples","preparation"," ","","do","to","a","no","pc","library","libraries","credit","high-school","high","co-requisites","co-requisite","corequisites","school","high-schools","schools","credits","course","courses","pre-requisite","pre-requisites","prerequisite","prerequisites","concept","concepts","basic","introduce","current","other","others","whose","introduces","skill","skills","practical","research", "projects", "labs", "lab", "laboratories", "seminar", "college", "precollege", "university", "class", "periods", "professor", "professors","undergrad", "undergraduate", "grad", "graduate", "studies", "instructor", "instructors","consent","able","about","across","after","all","almost","also","among","even","better","and","any","are","because","been","so","few","but","can","cannot","further","make","makes","many","ahead","could","dear","did","does","either","else","ever","every","for","from","get","got","had","has","have","her","hers","him","his","how","however","into","its","just","least","let","like","likely","may","might","in","on","most","must","neither","nor","not","off","often","only","our","own","other","say","says","she","the","rather","said","says","should","since","some","than","that","their","them","then","there","was","who","yet","you","why","these","they","this","twas","wants","were","what","when","where","which","while","whom","will","with","would","your","even"};	
+        String[] ignoreWords = new String[] {"pre","curriculum","lower","data","team","teams","environment","partitioning","reuse","features","bound","relate","related","task","tasks","both","attention","member","exact","faculty","members","recent","developments","faculties","description","formal","focuses","focus","competition","competitions","hostile","candidates","candidacy","introductory","course","courses","candidate","lectures","uses","use","modern","schemes","scheme","elementary","proof","hour","hours","lecture","homework","curiculum","homeworks","teaching","assistant","assistants","","geometry","algebra","assignment","assignments","design","unit","explore","selected","explores","engineering","management","method","specifications","specification","units","programs","implementations","implementation","future","program","emphasis","techniques","more","proofs","'","","fundamental","limited","part","media","scientific","experience","fundamentals","topic","level","levels","topics","knowledge","s","campus","campuses","","fee","fees","none","laboratory","familiar","familiarity","use","books","prior","standard","recommended","book","area","quarter","semester",",","form","learn","learns","good","aka","floor","building","bldg","understanding","problem","problems","topic","student","students","standing","cs","cse","main","principle","principles","same","similar","cheap","math","maths","mathematics","practice","computer","computers","science","sciences","small","study","areas","or","  ","   ","un","cases","case","both","\\/","enrollment","an","sophomore","junior","senior","several","various","freshman","corequisite","corequisites","example","examples","preparation"," ","","do","to","a","no","pc","library","libraries","credit","high-school","high","co-requisites","co-requisite","corequisites","school","high-schools","schools","credits","course","courses","pre-requisite","pre-requisites","prerequisite","prerequisites","concept","concepts","basic","introduce","current","other","others","whose","introduces","skill","skills","practical","research", "projects", "labs", "lab", "laboratories", "seminar", "college", "precollege", "university", "class", "periods", "professor", "professors","undergrad", "undergraduate", "grad", "graduate", "studies", "instructor", "instructors","consent","able","about","across","after","all","almost","also","among","even","better","and","any","are","because","been","so","few","but","can","cannot","further","make","makes","many","ahead","could","dear","did","does","either","else","ever","every","for","from","get","got","had","has","have","her","hers","him","his","how","however","into","its","just","least","let","like","likely","may","might","in","on","most","must","neither","nor","not","off","often","only","our","own","other","say","says","she","the","rather","said","says","should","since","some","than","that","their","them","then","there","was","who","yet","you","why","these","they","this","twas","wants","were","what","when","where","which","while","whom","will","with","would","your","even"};	
         for(int i = 0; i < ignoreWords.length; i ++)
         {
         	ignoreList.add(ignoreWords[i]);
@@ -505,26 +505,27 @@ public class Main {
 								
 							}
 						}
-						if(wc <= 120 || df <= 80)
+						if(wc > 50*(moduleWords.length-1) && df < 8*(moduleWords.length-1))
 						{
+							isModule = true;
+						}
+						if(wc > 125*(moduleWords.length-1) || df > 20*(moduleWords.length-1))
 							isModule = false;
-						}
-						if(wc > 160 && df < 80)
-						{
-							isModule = true;
-						}
-						if(df > 160 && wc < 120)
-						{
-							isModule = true;
-						}
+//						if(df > 160 && wc < 120)
+//						{
+//							isModule = true;
+//						}
+//						if(wc <= 120 || df <= 80)
+//						{
+//							isModule = false;
+//						}
 						if(moduleWords.length == 2)
 						{
-							if(wc > 40 && df > 15)
+							if(wc > 50 && df > 8)
 								isModule = true;
-							if(wc < 30)
+							if(wc > 125 || df > 20)
 								isModule = false;
-							if(df > 16)
-								isModule = false;
+							
 						}
 						if(isModule && (double)((double)isConsidered / (double)moduleWords.length) >= 0.5)
 						{
