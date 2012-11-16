@@ -26,7 +26,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	private static String[] inputDescUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
+	private static String[] inputDescUrls = new String[] {"http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html"};
     private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
     private static String[] inputUrls=inputDescUrls;
     private static boolean usingLinks=false;
@@ -56,9 +56,10 @@ public class Main {
 	private static HashMap<String, Course> courseList = new HashMap<String, Course>();
 	public static int countDescParsed = 0;
         public static Set<String> allPreReqCourseNames=new HashSet<String>();
+        public static Set<Integer> allPreReqModuleIDs=new HashSet<Integer>();
 	
 
-	public static int parallStruct(Elements blocks, int uni, Pattern pattern, int pIndex, Pattern[] pPreSets)
+	public static int parallStruct(Elements blocks, int uni, Pattern pattern, int pIndex, Pattern[] pPreSets, String courseOwner)
         {
             for(Element e : blocks)
             {
@@ -112,7 +113,7 @@ public class Main {
                 if(descFound) //only create course object if the description is found
                 {
                     ArrayList<String> preReq=new ArrayList<String>();
-                    findPrereqInDesc(desc, pIndex, pPreSets, preReq);
+                    findPrereqInDesc(desc, pIndex, pPreSets, preReq,courseOwner);
                     Course newCourse=new Course(id,String.valueOf(uni),desc,preReq);
                     courseList.put(id, newCourse);
                 }                                        
@@ -122,11 +123,33 @@ public class Main {
         }
         
         //returns true if it found the "prereq" string within the description
-        public static boolean findPrereqInDesc(String desc, int patternIndex,Pattern[] pSet, ArrayList<String> preReq)
+        public static boolean findPrereqInDesc(String desc, int patternIndex,Pattern[] pSet, ArrayList<String> preReq, String courseOwner)
         {          
             int index=desc.indexOf("Prerequisite");
+//            if(index!=-1)
+//            {   
+//                String reg="\\b[a-zA-Z]?[0-9]{2,5}[a-zA-Z]?\\b";
+//                Pattern patternP=Pattern.compile(reg);
+//                String input=desc.substring(index);
+//                matcher=patternP.matcher(input);
+//                while(matcher.find())
+//                {
+//                    String courseID;
+//                    String numPart=matcher.group();
+//                    int i=courseOwner.indexOf(" ");
+//                    if(i==-1)
+//                    {   courseID=numPart;}
+//                    else
+//                    {   courseID=courseOwner.substring(0, i)+" "+numPart;}
+//                    System.out.println("courseID Apended:"+courseID);
+//                    allPreReqCourseNames.add(courseID);
+//                    preReq.add(courseID);             
+//                }
+//                
+//                return true;
+//            }
             if(index!=-1)
-            {   Pattern patternP=pSet[patternIndex];
+            {   Pattern patternP=pSet[2];
                 String input=desc.substring(index);
                 matcher=patternP.matcher(input);
                 while(matcher.find())
@@ -144,7 +167,7 @@ public class Main {
         }
         
          private static void linkStruct(Elements foundBlocks, int ip, Pattern pattern,int patternIndex, 
-                 Pattern[] pPreSets, Document htmlDoc, String url) throws IOException 
+                 Pattern[] pPreSets, Document htmlDoc, String url, String courseOwner) throws IOException 
          {
              System.out.print("inside 134!");
              aElements = htmlDoc.select("a");
@@ -241,7 +264,7 @@ public class Main {
                                         descFound=true;
                                         ArrayList<String> preReq=new ArrayList<String>();
                                         //find Prereq in the course description
-                                        preFound=findPrereqInDesc(desc, patternIndex, pPreSets, preReq);
+                                        preFound=findPrereqInDesc(desc, patternIndex, pPreSets, preReq, courseOwner);
                                         if(!preFound) 
                                         {   
                                             Elements pBlock=innerhtmlDoc.getElementsContainingOwnText("Prerequisite");
@@ -394,7 +417,7 @@ public class Main {
                                 if(descFound) //only create course object if the description is found
                                 {                                
                                     ArrayList<String> preReq=new ArrayList<String>();
-                                    boolean preFound=findPrereqInDesc(desc, pIndex, pPreSets, preReq);
+                                    boolean preFound=findPrereqInDesc(desc, pIndex, pPreSets, preReq,id);
     //                                if(!preFound)
     //                                {
     //                                    
@@ -405,12 +428,12 @@ public class Main {
                                 }
                                 if(courseList.size()<10) //if dont get enough course, try another approach
                             {
-                            parallStruct(foundBlocks,ip,pattern,pIndex,pPreSets);
+                            parallStruct(foundBlocks,ip,pattern,pIndex,pPreSets, id);
                             }
                         }
                         else
                         {                     
-                            linkStruct(foundBlocks,ip,pattern,pIndex,pPreSets,htmlDoc,inputUrls[ip]);
+                            linkStruct(foundBlocks,ip,pattern,pIndex,pPreSets,htmlDoc,inputUrls[ip],id);
                             
                         }     
                 }
@@ -450,6 +473,7 @@ public class Main {
 					int isConsidered = 0;
 					boolean isDigit = false;
 					int wc=0,df=0;
+                                        ArrayList<Module> modulesInsideThisCourse=new ArrayList<Module>();
 					for(String currentModule : potentialModules)//FIRST DATABASE LOOKUP
 					{
 						System.out.println("...");
@@ -504,12 +528,14 @@ public class Main {
 							{
 								Module module = new Module();
 								module.setName(currentModule);
+                                                                modulesInsideThisCourse.add(module);
 								moduleSet.add(module);
 								moduleNames.add(module.getName());
 								System.out.println("ADDED MODULE======================================>" + currentModule);
 							}
 						}
 					}
+                                        thisCourse.setModules(modulesInsideThisCourse);
 				}
                
 //                for(Course c: courseList)
@@ -528,7 +554,7 @@ public class Main {
 						w.write(currentCourse.getNum() + "---" + currentCourse.getDesc() + "---");
 						for(Module m : currentCourse.getModules())
 						{
-							w.write(m.getId() + "---" + m.getName() + "---" + m.getPreReqModulesId().toArray().toString() + "\n");
+							w.write("preReqModules: "+m.getId() + "---" + m.getName() + "---" + m.getPreReqModulesId().toArray().toString() + "\n");
 							
 						}
 						w.write("EOC");
@@ -552,25 +578,25 @@ public class Main {
 				{
 					Course currentCourse=courseList.get(iterator2.next().getKey());
 					ArrayList<String> preIDs=currentCourse.getPreReq();
-					ArrayList<Module> allPrereqModules=new ArrayList<Module>();
+					ArrayList<Module> allPrereqModulesInCourse=new ArrayList<Module>();
 					ArrayList<Integer> tempIdList = new ArrayList<Integer>();
 					ArrayList<Integer> tempCountList = new ArrayList<Integer>();
 					for(String preID: preIDs)
 					{
 						if(courseList.get(preID) == null)
 							continue;
-						allPrereqModules.addAll(courseList.get(preID).getModules());
-						for(int i = 0; i < allPrereqModules.size(); i ++)
+						allPrereqModulesInCourse.addAll(courseList.get(preID).getModules());
+						for(int i = 0; i < allPrereqModulesInCourse.size(); i ++)
 						{
-							if(tempIdList.contains(allPrereqModules.get(i).getId()))
+							if(tempIdList.contains(allPrereqModulesInCourse.get(i).getId()))
 							{
-								int index = tempIdList.indexOf(allPrereqModules.get(i).getId());
+								int index = tempIdList.indexOf(allPrereqModulesInCourse.get(i).getId());
 								tempCountList.set(index, tempCountList.get(index)+1);
 							}
 							else
 							{
-								tempIdList.add(allPrereqModules.get(i).getId());
-								int index = tempIdList.indexOf(allPrereqModules.get(i).getId());
+								tempIdList.add(allPrereqModulesInCourse.get(i).getId());
+								int index = tempIdList.indexOf(allPrereqModulesInCourse.get(i).getId());
 								tempCountList.set(index, 1);
 							}
 						}
@@ -580,22 +606,40 @@ public class Main {
 						sortTempArrays(tempCountList, tempIdList);
 //					Iterator it = moduleSet.iterator();
 						ArrayList<Integer> realTop2Prereq=new ArrayList<Integer>();
-						realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
+						if(tempIdList.size()>1)
+                                                {
+                                                realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
 						realTop2Prereq.add(tempIdList.get(tempIdList.size()-2));
+                                                allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-1));
+                                                allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-2));
+                                                
+                                                }
+                                                else
+                                                {
+                                                    realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
+                                                    allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-1));
+                                                }
 						for(Module m : currentCourse.getModules())
-						{
-							m.setPreReqModulesId(realTop2Prereq);
+                                                {
+                                                    m.setPreReqModulesId(realTop2Prereq);
 						}
 					}
 				}
 
 				System.out.println("PRINTING MODULES AND THEIR DEPENDENCIES...");
                 //print out the results for debugging
+                                Set<Module> moduleNodes=moduleSet;
 				for(Module currentModule : moduleSet)
 				{
 					System.out.println(currentModule.toString());
 					if(currentModule.getPreReqModulesId().size()==0)
-						System.out.println("No Pre-requisites found for this Module--0 size");
+                                        {
+                                            System.out.println("No Pre-requisites found for this Module--0 size");
+                                            if(!allPreReqModuleIDs.contains(currentModule.getId()))
+                                            {
+                                                continue;
+                                            }
+                                        }
 					else if(currentModule.getPreReqModulesId().size()==2)
 						System.out.println("Dependency --> " + currentModule.getPreReqModulesId().get(0) + ", " + currentModule.getPreReqModulesId().get(1));
 					else
