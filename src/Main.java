@@ -26,7 +26,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	private static String[] inputDescUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
+	private static String[] inputDescUrls = new String[] {"http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html"};
     private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
     private static String[] inputUrls=inputDescUrls;
     private static boolean usingLinks=false;
@@ -344,6 +344,7 @@ public class Main {
                             if(foundBlocks.size()>10)
                             {    pattern=pSets[i];
                                 pIndex=i;
+                                System.out.println("pattern: "+i);
                                 break;   
                             }
                         }
@@ -412,7 +413,16 @@ public class Main {
                         }     
                 }
                 
-        
+                
+                Iterator<Entry<String, Course>> iteratorX = courseList.entrySet().iterator();
+                while(iteratorX.hasNext())
+                {
+                    Course currentCourse=courseList.get(iteratorX.next().getKey());
+                    System.out.println("Course: "+currentCourse.getNum());
+                    System.out.println("Description: "+currentCourse.getDesc());
+                    System.out.println("Prereq: "+currentCourse.getPreReq().toString());
+                }
+                
                 System.out.println("CREATING COURSES DONE...");
 		
                 System.out.println("STARTED MODULE FINDING...");
@@ -422,12 +432,13 @@ public class Main {
                 int courseCount = 0;
 				while(iterator.hasNext())// && courseCount < 2)
 				{
-					String a=(thisCourse = courseList.get(iterator.next().getKey())).getDesc();
+					System.out.println("course FOUND!!!!");
+                                    String a=(thisCourse = courseList.get(iterator.next().getKey())).getDesc();
 					System.out.println(a);
-					if(thisCourse.getPreReq().size() == 0)
-					{
-						continue;
-					}
+//					if(thisCourse.getPreReq().size() == 0)
+//					{
+//						continue;
+//					}
 					courseCount ++;
 					List<String> potentialModules = nlpParser.getPotentialModules(a);
 					boolean isModule = true;
