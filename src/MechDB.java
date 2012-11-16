@@ -104,20 +104,26 @@ public class MechDB {
 			while(iterator.hasNext())
 			{
 				Entry<String, List<Integer>> entry = iterator.next();
-				List<Integer> tempList = entry.getValue();
-				for(int i = 0; i < tempList.size(); i ++)
+				List<Integer> longList = entry.getValue();
+				List<Integer> newList = getUpdateDBList(longList);
+				int j, i = 0, count = 0;
+				for(j = 0; j < newList.size(); j ++)
 				{
+					while(longList.get(i) == newList.get(j))
+					{
+						count ++;
+						i ++;
+					}
 					preparedStatement = connect.prepareStatement("insert into terms values (default,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-					preparedStatement.setInt(1, tempList.get(i));
-					preparedStatement.setString(2, entry.getKey());
-					
-					preparedStatement.setInt(3, (tempList.get(i))/(tempList.size()));
-//					preparedStatement.executeUpdate();
-//					ResultSet resultSet = preparedStatement.getGeneratedKeys();
-//					if (resultSet.next())
-//						System.out.println(resultSet.getInt(1));
-					System.out.println("Added Term:" + entry.getKey() + " to doc:"+tempList.get(i)+"...count"+tempList.size());
+					preparedStatement.setInt(1,newList.get(j));
+					preparedStatement.setString(2,entry.getKey());
+					preparedStatement.setInt(3,count);
+					preparedStatement.executeUpdate();
+					ResultSet resultSet = preparedStatement.getGeneratedKeys();
 				}
+				if (resultSet.next())
+					System.out.println(resultSet.getInt(1));
+				System.out.println("Added Term:" + entry.getKey() + " to doc:"+longList.get(i)+"...count"+count);
 			}
 			
 		}
@@ -127,6 +133,20 @@ public class MechDB {
 		finally{
 			close();
 		}
+	}
+	private List<Integer> getUpdateDBList(List<Integer> inputList)
+	{
+		List<Integer> outputList = new ArrayList<Integer>();
+		Integer current = null;
+		Integer previous = null;
+		for(int i = 0; i < inputList.size(); i ++)
+		{
+			current = (Integer)inputList.get(i);
+			if(!current.equals(previous))
+				outputList.add(current);
+			previous = current;
+		}
+		return outputList;
 	}
 	private void close() {
 		try {
