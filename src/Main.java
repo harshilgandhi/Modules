@@ -505,27 +505,26 @@ public class Main {
 								
 							}
 						}
-						if(wc > 50*(moduleWords.length-1) && df < 8*(moduleWords.length-1))
+						if(wc <= 120 || df <= 80)
+						{
+							isModule = false;
+						}
+						if(wc > 160 && df < 80)
 						{
 							isModule = true;
 						}
-						if(wc > 125*(moduleWords.length-1) || df > 20*(moduleWords.length-1))
-							isModule = false;
-//						if(df > 160 && wc < 120)
-//						{
-//							isModule = true;
-//						}
-//						if(wc <= 120 || df <= 80)
-//						{
-//							isModule = false;
-//						}
+						if(df > 160 && wc < 120)
+						{
+							isModule = true;
+						}
 						if(moduleWords.length == 2)
 						{
-							if(wc > 50 && df > 8)
+							if(wc > 40 && df > 15)
 								isModule = true;
-							if(wc > 125 || df > 20)
+							if(wc < 30)
 								isModule = false;
-							
+							if(df > 16)
+								isModule = false;
 						}
 						if(isModule && (double)((double)isConsidered / (double)moduleWords.length) >= 0.5)
 						{
