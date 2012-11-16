@@ -1,0 +1,18 @@
+digraph {
+"week"
+"the line"->"week"
+"initial value problems"
+"week"->"initial value problems"
+"the line"->"initial value problems"
+"the line"
+"week"->"the line"
+"partial differential equations"
+"week"->"partial differential equations"
+"the line"->"partial differential equations"
+"calculus"
+"week"->"calculus"
+"the line"->"calculus"
+"the dual"
+"week"->"the dual"
+"the line"->"the dual"
+}
