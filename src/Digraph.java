@@ -6,7 +6,7 @@ import java.util.Set;
 public class Digraph {
   
   public static boolean DigraphToFile(String file, Set<Module> nodes) {
-    String fileName = file + ".dot";
+    String fileName = "/Users/Lannister/Dropbox/"+file+".dot";
     File f = new File(fileName);
     try {
       if (!f.createNewFile())
