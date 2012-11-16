@@ -28,7 +28,8 @@ public class Main {
 	 */
 
     //private static String[] inputDescUrls = new String[] {"http://www.seas.harvard.edu/academics/areas/computer-science-courses","http://www.cs.washington.edu/education/courses/","http://www.ucsd.edu/catalog/courses/CSE.html"};
-    private static String[] inputDescUrls = new String[] {"http://general-catalog.berkeley.edu/catalog/gcc_list_crse_req?p_dept_name=Mathematics&p_dept_cd=MATH"};
+    private static String[] inputDescUrls = new String[] {"http://www.uh.edu/academics/catalog/colleges/nsm/courses/math/\n" +
+""};
 
     private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
     private static String[] inputUrls=inputDescUrls;
