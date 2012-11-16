@@ -22,7 +22,6 @@ public class MechDB {
 										"http://ame-www.usc.edu/classes/classes_all.shtml",
 										"http://www.enme.umd.edu/undergrad/courses/core.html",
 										"http://www.enme.umd.edu/undergrad/courses/electives.html"};
-		
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","pass@123");
@@ -32,11 +31,7 @@ public class MechDB {
 				preparedStatement = connect.prepareStatement("insert into documents values ('"+urls[i]+"','Mechanical',0,0)", Statement.RETURN_GENERATED_KEYS);
 				preparedStatement.executeUpdate();
 			}
-			for(int i = 0; i < urls.length; i ++)
-			{
-				preparedStatement = connect.prepareStatement("insert into documents values ('"+urls[i]+"','Mechanical',0,0)", Statement.RETURN_GENERATED_KEYS);
-				preparedStatement.executeUpdate();
-			}
+			
 		}
 		catch (Exception e){
 			e.printStackTrace();
