@@ -26,7 +26,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	private static String[] inputDescUrls = new String[] {"http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html"};
+	private static String[] inputDescUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
     private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
     private static String[] inputUrls=inputDescUrls;
     private static boolean usingLinks=false;
@@ -126,42 +126,42 @@ public class Main {
         public static boolean findPrereqInDesc(String desc, int patternIndex,Pattern[] pSet, ArrayList<String> preReq, String courseOwner)
         {          
             int index=desc.indexOf("Prerequisite");
-//            if(index!=-1)
-//            {   
-//                String reg="\\b[a-zA-Z]?[0-9]{2,5}[a-zA-Z]?\\b";
-//                Pattern patternP=Pattern.compile(reg);
-//                String input=desc.substring(index);
-//                matcher=patternP.matcher(input);
-//                while(matcher.find())
-//                {
-//                    String courseID;
-//                    String numPart=matcher.group();
-//                    int i=courseOwner.indexOf(" ");
-//                    if(i==-1)
-//                    {   courseID=numPart;}
-//                    else
-//                    {   courseID=courseOwner.substring(0, i)+" "+numPart;}
-//                    System.out.println("courseID Apended:"+courseID);
-//                    allPreReqCourseNames.add(courseID);
-//                    preReq.add(courseID);             
-//                }
-//                
-//                return true;
-//            }
             if(index!=-1)
-            {   Pattern patternP=pSet[2];
+            {   
+                String reg="\\b[a-zA-Z]?[0-9]{2,5}[a-zA-Z]?\\b";
+                Pattern patternP=Pattern.compile(reg);
                 String input=desc.substring(index);
                 matcher=patternP.matcher(input);
                 while(matcher.find())
                 {
-                    String courseID1=matcher.group();
-                    int i=courseID1.indexOf("s ");
-                    String courseID=courseID1.substring(i+2);
+                    String courseID;
+                    String numPart=matcher.group();
+                    int i=courseOwner.indexOf(" ");
+                    if(i==-1)
+                    {   courseID=numPart;}
+                    else
+                    {   courseID=courseOwner.substring(0, i)+" "+numPart;}
+                    System.out.println("courseID Apended:"+courseID);
                     allPreReqCourseNames.add(courseID);
                     preReq.add(courseID);             
                 }
+                
                 return true;
             }
+//            if(index!=-1)
+//            {   Pattern patternP=pSet[patternIndex];
+//                String input=desc.substring(index);
+//                matcher=patternP.matcher(input);
+//                while(matcher.find())
+//                {
+//                    String courseID1=matcher.group();
+//                    int i=courseID1.indexOf("s ");
+//                    String courseID=courseID1.substring(i+2);
+//                    allPreReqCourseNames.add(courseID);
+//                    preReq.add(courseID);             
+//                }
+//                return true;
+//            }
             else
             {
                 return false;
@@ -611,18 +611,19 @@ public class Main {
 						sortTempArrays(tempCountList, tempIdList);
 //					Iterator it = moduleSet.iterator();
 						ArrayList<Integer> realTop2Prereq=new ArrayList<Integer>();
-						if(tempIdList.size()>1)
+						if(tempIdList.size()>2)
                                                 {
-                                                realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
-						realTop2Prereq.add(tempIdList.get(tempIdList.size()-2));
-                                                allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-1));
-                                                allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-2));
+                                                    for(int i=1; i<4;i++)
+                                                    {
+                                                       realTop2Prereq.add(tempIdList.get(tempIdList.size()-i));
+                                                       allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-i));   
+                                                    }                                                
                                                 
                                                 }
                                                 else
                                                 {
-                                                    realTop2Prereq.add(tempIdList.get(tempIdList.size()-1));
-                                                    allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-1));
+                                                    realTop2Prereq.addAll(tempIdList);
+                                                    allPreReqModuleIDs.addAll(tempIdList);
                                                 }
 						for(Module m : currentCourse.getModules())
                                                 {
