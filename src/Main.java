@@ -154,7 +154,9 @@ public class Main {
                 matcher=patternP.matcher(input);
                 while(matcher.find())
                 {
-                    String courseID=matcher.group();
+                    String courseID1=matcher.group();
+                    int i=courseID1.indexOf("s ");
+                    String courseID=courseID1.substring(i+2);
                     allPreReqCourseNames.add(courseID);
                     preReq.add(courseID);             
                 }
@@ -349,7 +351,7 @@ public class Main {
                         String regex3="(^Computer\\sScience\\s[0-9]{2,4}\\b)";
                         String regexPre1="(\\b[A-Z]{2,6}\\s?[a-zA-Z]?[0-9]{1,5}-?[a-zA-Z]{0,2}\\b)";
                         String regexPre2="(\\[0-9]{2,4}[a-zA-Z]\\b)";
-                        String regexPre3="(\\bComputer\\sScience[s]?\\s[0-9]{2,4}\\b)";
+                        String regexPre3="(\\bComputer\\sScience[s]?\\s[0-9]{2,4}[a-zA-Z]?\\b)";
                         //String regex3="(\\b[A-Z][0-9]{2,4}[a-zA-Z]?\\b)"
 			pattern1 = Pattern.compile(regex1);
                         pattern2 = Pattern.compile(regex2);
@@ -581,8 +583,8 @@ public class Main {
 					Course currentCourse=courseList.get(iterator2.next().getKey());
 					ArrayList<String> preIDs=currentCourse.getPreReq();
 					ArrayList<Module> allPrereqModulesInCourse=new ArrayList<Module>();
-					ArrayList<Integer> tempIdList = new ArrayList<Integer>();
-					ArrayList<Integer> tempCountList = new ArrayList<Integer>();
+					ArrayList<Integer> tempIdList = new ArrayList<Integer>(20);
+					ArrayList<Integer> tempCountList = new ArrayList<Integer>(20);
 					for(String preID: preIDs)
 					{
 						if(courseList.get(preID) == null)
@@ -599,7 +601,7 @@ public class Main {
 							{
 								tempIdList.add(allPrereqModulesInCourse.get(i).getId());
 								int index = tempIdList.indexOf(allPrereqModulesInCourse.get(i).getId());
-								tempCountList.set(index, 1);
+								tempCountList.add(1);
 							}
 						}
 					}
@@ -630,7 +632,7 @@ public class Main {
 
 				System.out.println("PRINTING MODULES AND THEIR DEPENDENCIES...");
                 //print out the results for debugging
-                                Set<Module> moduleNodes=moduleSet;
+                                Set<Module> moduleNodes= (HashSet<Module>)((HashSet<Module>)moduleSet).clone();
 				for(Module currentModule : moduleSet)
 				{
 					System.out.println(currentModule.toString());
@@ -639,7 +641,7 @@ public class Main {
                                             System.out.println("No Pre-requisites found for this Module--0 size");
                                             if(!allPreReqModuleIDs.contains(currentModule.getId()))
                                             {
-                                                continue;
+                                                moduleNodes.remove(currentModule);
                                             }
                                         }
 					else if(currentModule.getPreReqModulesId().size()==2)
@@ -647,7 +649,7 @@ public class Main {
 					else
 						System.out.println("Dependency --> " + currentModule.getPreReqModulesId().get(0));
 				}
-			Digraph.DigraphToFile("g5-cs", moduleSet);
+			Digraph.DigraphToFile("g5-cs", moduleNodes);
 		
 //		String[] inputUrls = new String[] {"http://www.cms.caltech.edu/academics/course_desc"};
 //		
