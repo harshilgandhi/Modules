@@ -6,7 +6,7 @@ public class Course {
     private String id;
     private String uni;
     private String desc;
-    private ArrayList<String> preReq;
+    private ArrayList<String> preReq=new ArrayList<String>();
     private String title;
     List<String> phrases = new ArrayList<String>();
     private List<Module> modules = new ArrayList<Module>();

@@ -55,6 +55,7 @@ public class Main {
 	private static Set<String> moduleNames = new HashSet<String>();
 	private static HashMap<String, Course> courseList = new HashMap<String, Course>();
 	public static int countDescParsed = 0;
+        public static Set<String> allPreReqCourseNames=new HashSet<String>();
 	
 
 	public static int parallStruct(Elements blocks, int uni, Pattern pattern, int pIndex, Pattern[] pPreSets)
@@ -131,6 +132,7 @@ public class Main {
                 while(matcher.find())
                 {
                     String courseID=matcher.group();
+                    allPreReqCourseNames.add(courseID);
                     preReq.add(courseID);             
                 }
                 return true;
@@ -263,6 +265,7 @@ public class Main {
                                                     while(matcher.find())
                                                     {
                                                         String courseID=matcher.group();
+                                                        allPreReqCourseNames.add(courseID);
                                                         preReq.add(courseID);             
                                                     }
                                                     break;
@@ -430,7 +433,12 @@ public class Main {
                 int courseCount = 0;
 				while(iterator.hasNext())// && courseCount < 2)
 				{
-					String a=(thisCourse = courseList.get(iterator.next().getKey())).getDesc();
+					thisCourse=courseList.get(iterator.next().getKey());
+                                        if(thisCourse.getPreReq().size()==0)
+                                            if(!allPreReqCourseNames.contains(thisCourse.getNum()))
+                                                continue;
+                                        
+                                        String a=thisCourse.getDesc();
 					System.out.println(a);
 //					if(thisCourse.getPreReq().size() == 0)
 //					{
