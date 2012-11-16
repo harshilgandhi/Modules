@@ -15,6 +15,7 @@ public class Module {
 	private List<Course> preReqCourses = new ArrayList<Course>();
 	private List<Integer> tempPreReqModulesId = new ArrayList<Integer>();
 	private List<Integer> tempPreReqModulesCount = new ArrayList<Integer>();
+        private List<Course> containedBy =new ArrayList<Course>();
 	
 	//NON STATIC BLOCK
 	{
@@ -26,6 +27,16 @@ public class Module {
 		
 	}
 
+        public void setContainedBy(List<Course> containedBy) {
+            this.containedBy = containedBy;
+        }
+
+        public List<Course> getContainedBy() {
+            return containedBy;
+        }
+
+        
+        
         public List<Module> getAllPreReqModules() {
             return allPreReqModules;
         }

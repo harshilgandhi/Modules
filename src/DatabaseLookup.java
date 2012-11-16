@@ -21,7 +21,7 @@ public class DatabaseLookup {
 		int wordCount = -1;
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","pass@123");
+			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","Jialefu6");
 			
 			preparedStatement = connect.prepareStatement("select sum(count) from Terms where word = '"+word+"' and docId in (select docId from Documents where Department = '"+dept+"');", Statement.RETURN_GENERATED_KEYS);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -47,7 +47,7 @@ public class DatabaseLookup {
 		
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","pass@123");
+			connect = DriverManager.getConnection("jdbc:mysql://localhost/G5ModulesDB","root","Jialefu6");
 			
 			preparedStatement = connect.prepareStatement("select count(*) from Documents where Department = '"+dept+"' and docId in (select docId from Terms where word = '"+word+"');", Statement.RETURN_GENERATED_KEYS);
 			ResultSet resultSet = preparedStatement.executeQuery();

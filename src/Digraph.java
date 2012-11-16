@@ -6,7 +6,7 @@ import java.util.Set;
 public class Digraph {
   
   public static boolean DigraphToFile(String file, Set<Module> nodes) {
-    String fileName = file+".dot";
+    String fileName = "/Users/Lannister/Dropbox/pic/"+file+".dot";
     File f = new File(fileName);
     try {
       if (!f.createNewFile())
@@ -20,7 +20,8 @@ public class Digraph {
         if(!(preReqs.size() == 0))
         	for (Module from : nodes)
         		if(preReqs.contains(from.getId()))
-        			w.write("\"" + from.getName() + "\"->\"" + to.getName() + "\"\n");
+                               if(!from.getName().equals(to.getName()))
+        			  w.write("\"" + from.getName() + "\"->\"" + to.getName() + "\"\n");
       }
       w.write("}\n");
       w.close();

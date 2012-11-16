@@ -26,7 +26,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	private static String[] inputDescUrls = new String[] {"http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html"};
+	private static String[] inputDescUrls = new String[] {"http://www.cs.washington.edu/education/courses/","http://www.ucsd.edu/catalog/courses/CSE.html","http://www.seas.harvard.edu/academics/areas/computer-science-courses"};
     private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
     private static String[] inputUrls=inputDescUrls;
     private static boolean usingLinks=false;
@@ -57,6 +57,7 @@ public class Main {
 	public static int countDescParsed = 0;
         public static Set<String> allPreReqCourseNames=new HashSet<String>();
         public static Set<Integer> allPreReqModuleIDs=new HashSet<Integer>();
+        public static Set<Module> reducedModuleSet= new HashSet<Module>();
 	
 
 	public static int parallStruct(Elements blocks, int uni, Pattern pattern, int pIndex, Pattern[] pPreSets, String courseOwner)
@@ -72,6 +73,7 @@ public class Main {
                 Element currentElement=e;
                 String desc="";
                 title=e.text(); //found the course title
+                String completeDesc="";
                 if(title.length()>70) //if title is too long, we consider it not title
                 {
                     continue;
@@ -101,7 +103,11 @@ public class Main {
 
                     if((tempDesc.length()>60)) //if description found
                     {   
-                        desc=tempDesc;
+                        completeDesc=tempDesc;
+                        if(tempDesc.length()>600)
+                           desc=tempDesc.substring(0,600);
+                        else
+                           desc=tempDesc;
                         descFound=true;
                     }
                     else
@@ -113,7 +119,7 @@ public class Main {
                 if(descFound) //only create course object if the description is found
                 {
                     ArrayList<String> preReq=new ArrayList<String>();
-                    findPrereqInDesc(desc, pIndex, pPreSets, preReq,courseOwner);
+                    findPrereqInDesc(completeDesc, pIndex, pPreSets, preReq,courseOwner);
                     Course newCourse=new Course(id,String.valueOf(uni),desc,preReq);
                     courseList.put(id, newCourse);
                 }                                        
@@ -344,7 +350,7 @@ public class Main {
 		for(int ip = 0; ip < inputUrls.length; ip ++)
 		{
 			System.out.println("STILL PARSING...");
-			
+			int courseCound=0;
 			Document htmlDoc = Jsoup.connect(inputUrls[ip]).get();
                         String regex1="(^[A-Z]{2,6}\\s?[a-zA-Z]?[0-9]{1,5}-?[a-zA-Z]{0,2}\\b)";
                         String regex2="(^[0-9]{2,4}[a-zA-Z]\\b)";
@@ -380,7 +386,7 @@ public class Main {
                                 for(Element e : foundBlocks)
                                 {
 
-
+                                String completeDesc="";
                                 boolean descFound=false;
                                 int parentCount=0;
                                 Element parent=e.parent();
@@ -406,7 +412,12 @@ public class Main {
                                     {   
                                         int i=tempDesc.indexOf(title);
                                         //get the pure description by deleting the title and everything comes before it
-                                        desc=tempDesc.substring(i+title.length()); 
+                                        tempDesc=tempDesc.substring(i+title.length()); 
+                                        completeDesc=tempDesc;
+                                        if(tempDesc.length()>600)
+                                           desc=tempDesc.substring(0,600);
+                                        else
+                                           desc=tempDesc;
                                         descFound=true;
                                     }
                                     else
@@ -419,18 +430,20 @@ public class Main {
                                 if(descFound) //only create course object if the description is found
                                 {                                
                                     ArrayList<String> preReq=new ArrayList<String>();
-                                    boolean preFound=findPrereqInDesc(desc, pIndex, pPreSets, preReq,id);
+                                    boolean preFound=findPrereqInDesc(completeDesc, pIndex, pPreSets, preReq,id);
     //                                if(!preFound)
     //                                {
     //                                    
     //                                }
+                                    courseCound++;
                                     Course newCourse=new Course(id,String.valueOf(ip),desc,preReq);
                                     courseList.put(id, newCourse);
                                 }                                        
                                 }
-                                if(courseList.size()<10) //if dont get enough course, try another approach
+                                if(courseCound<10) //if dont get enough course, try another approach
                             {
-                            parallStruct(foundBlocks,ip,pattern,pIndex,pPreSets, id);
+                                courseCound=0;
+                                parallStruct(foundBlocks,ip,pattern,pIndex,pPreSets, id);
                             }
                         }
                         else
@@ -456,104 +469,116 @@ public class Main {
                 System.err.println();
                 Course thisCourse = null;
                 int courseCount = 0;
-				while(iterator.hasNext())// && courseCount < 2)
-				{
-					thisCourse=courseList.get(iterator.next().getKey());
-                                        if(thisCourse.getPreReq().size()==0)
-                                            if(!allPreReqCourseNames.contains(thisCourse.getNum()))
-                                                continue;
-                                        
-                                        String a=thisCourse.getDesc();
-					System.out.println(a);
+                while(iterator.hasNext())// && courseCount < 2)
+                {
+                        thisCourse=courseList.get(iterator.next().getKey());
+                        if(thisCourse.getPreReq().size()==0)
+                            if(!allPreReqCourseNames.contains(thisCourse.getNum()))
+                                continue;
+
+                        String a=thisCourse.getDesc();
+                        System.out.println(a);
 //					if(thisCourse.getPreReq().size() == 0)
 //					{
 //						continue;
 //					}
-					courseCount ++;
-					List<String> potentialModules = nlpParser.getPotentialModules(a);
-					boolean isModule = true;
-					int isConsidered = 0;
-					boolean isDigit = false;
-					int wc=0,df=0;
-                                        ArrayList<Module> modulesInsideThisCourse=new ArrayList<Module>();
-					for(String currentModule : potentialModules)//FIRST DATABASE LOOKUP
-					{
-						System.out.println("...");
-						currentModule = currentModule.trim();
-						isModule = true;
-						isConsidered = 0;
-						String[] moduleWords = currentModule.split(" ");
-						wc = 0; df = 0;
+                        courseCount ++;
+                        List<String> potentialModules = nlpParser.getPotentialModules(a);
+                        boolean isModule = true;
+                        int isConsidered = 0;
+                        boolean isDigit = false;
+                        int wc=0,df=0;
+                        //ArrayList<Module> modulesInsideThisCourse=new ArrayList<Module>();
+                        for(String currentModule : potentialModules)//FIRST DATABASE LOOKUP
+                        {
+                                System.out.println("...");
+                                currentModule = currentModule.trim();
+                                isModule = true;
+                                isConsidered = 0;
+                                String[] moduleWords = currentModule.split(" ");
+                                wc = 0; df = 0;
 
-						for(int i = 0; i < moduleWords.length; i ++)
-						{
-							isDigit = false;
-							
-							moduleWords[i] = moduleWords[i].toLowerCase();
-							for(int k = 0; k < moduleWords[i].length(); k ++)
-							{
-								if(!Character.isLetter(moduleWords[i].charAt(k)))
-									isDigit = true;
-							}
-							if(isDigit)
-								continue;
-							if(!ignoreList.contains(moduleWords[i]))
-							{
-								isConsidered ++;
+                                for(int i = 0; i < moduleWords.length; i ++)
+                                {
+                                        isDigit = false;
 
-								System.out.println("imp word........................"+moduleWords[i]);
-								wc += dblookup.getWordCount(moduleWords[i], "ComputerScience");
-								df += dblookup.getWordDocFreq(moduleWords[i], "ComputerScience");
-								
-							}
-						}
+                                        moduleWords[i] = moduleWords[i].toLowerCase();
+                                        for(int k = 0; k < moduleWords[i].length(); k ++)
+                                        {
+                                                if(!Character.isLetter(moduleWords[i].charAt(k)))
+                                                        isDigit = true;
+                                        }
+                                        if(isDigit)
+                                                continue;
+                                        if(!ignoreList.contains(moduleWords[i]))
+                                        {
+                                                isConsidered ++;
 
-						if(wc <= 100 || df <= 30)
-						{
-							isModule = false;
-						}
-						if(wc > 280 && df < 50)
-						{
-							isModule = true;
-						}
-						if(df > 120 && wc < 140)
-						{
-							isModule = true;
-						}
-						if(moduleWords.length == 2)
-						{
-							if(wc > 6 && df > 5)
-								isModule = true;
-							if(wc > 180)
-								isModule = false;
-							if(df > 20)
-								isModule = false;
-						}
-						if(isModule && (double)((double)isConsidered / (double)moduleWords.length) >= 0.5)
-						{
-							if(!moduleNames.contains(currentModule))
-							{
-								Module module = new Module();
-								module.setName(currentModule);
-                                                                modulesInsideThisCourse.add(module);
-								moduleSet.add(module);
-								moduleNames.add(module.getName());
-								System.out.println("ADDED MODULE======================================>" + currentModule);
-							}
-                                                        else
-                                                        {
-                                                            for(Module x: moduleSet)
-                                                            {
-                                                                if(x.getName().equals(currentModule)) 
-                                                                    modulesInsideThisCourse.add(x);
-                                                            }
-                                                           
-                                                        }
-						}
-					}
-                                        thisCourse.setModules(modulesInsideThisCourse);
-				}
-               
+                                                System.out.println("imp word........................"+moduleWords[i]);
+                                                wc += dblookup.getWordCount(moduleWords[i], "ComputerScience");
+                                                df += dblookup.getWordDocFreq(moduleWords[i], "ComputerScience");
+
+                                        }
+                                }
+
+                                if(wc <= 100 || df <= 30)
+                                {
+                                        isModule = false;
+                                }
+                                if(wc > 280 && df < 50)
+                                {
+                                        isModule = true;
+                                }
+                                if(df > 120 && wc < 140)
+                                {
+                                        isModule = true;
+                                }
+                                if(moduleWords.length == 2)
+                                {
+                                        if(wc > 6 && df > 5)
+                                                isModule = true;
+                                        if(wc > 180)
+                                                isModule = false;
+                                        if(df > 20)
+                                                isModule = false;
+                                }
+                                if(isModule && (double)((double)isConsidered / (double)moduleWords.length) >= 0.5)
+                                {
+                                        if(!moduleNames.contains(currentModule))
+                                        {
+                                                Module module = new Module();
+                                                module.setName(currentModule);
+                                                module.getContainedBy().add(thisCourse);
+                                                moduleSet.add(module);
+                                                moduleNames.add(module.getName());
+                                                System.out.println("ADDED MODULE ======================================>" + currentModule);
+
+                                        }
+                                        else
+                                        {
+                                            for(Module x: moduleSet)
+                                            {
+                                                if(x.getName().equals(currentModule)) 
+                                                {    
+                                                     reducedModuleSet.add(x);
+                                                     x.getContainedBy().add(thisCourse);
+                                                     System.out.println("ADDED MODULE REDUCED======================================>" + currentModule);
+                                                }
+                                            }                          
+                                        }
+                                }
+                        }
+                }
+
+                for(Module x: reducedModuleSet)
+                {
+                    List<Course> containedBy=x.getContainedBy();
+                    for (Course c: containedBy)
+                    {
+                        c.getModules().add(x);
+                    }
+                }
+
 //                for(Course c: courseList)
 //                {
 //                    System.out.println(c);
@@ -608,15 +633,15 @@ public class Main {
                                         }
                                 }
                                                 
-                                for(Module hh: moduleSet)                
+                                for(Module hh: reducedModuleSet)                
                                 {                
                                     ArrayList<Integer> tempIdList = new ArrayList<Integer>();
                                     ArrayList<Integer> tempCountList = new ArrayList<Integer>();
                                     
                                     for(int i = 0; i < hh.getAllPreReqModules().size(); i ++)
                                     {
-                                        List<Module> m=hh.getAllPreReqModules();
-                                        if(tempIdList.contains(m.get(i).getId()))
+                                        List<Module> m=hh.getAllPreReqModules();                                     
+                                        if(tempIdList.contains(m.get(i).getId())&& !(m.get(i).getName().equals(hh.getName())))
                                         {
                                                 int index = tempIdList.indexOf(m.get(i).getId());
                                                 tempCountList.set(index, tempCountList.get(index)+1);
@@ -654,8 +679,8 @@ public class Main {
 
 				System.out.println("PRINTING MODULES AND THEIR DEPENDENCIES...");
                 //print out the results for debugging
-                                Set<Module> moduleNodes= (HashSet<Module>)((HashSet<Module>)moduleSet).clone();
-				for(Module currentModule : moduleSet)
+                                Set<Module> moduleNodes= (HashSet<Module>)((HashSet<Module>)reducedModuleSet).clone();
+				for(Module currentModule : reducedModuleSet)
 				{
 					System.out.println(currentModule.toString());
 					if(currentModule.getPreReqModulesId().size()==0)
@@ -671,6 +696,7 @@ public class Main {
 					else
 						System.out.println("Dependency --> " + currentModule.getPreReqModulesId().get(0));
 				}
+
 			
 			
 			for(Module thisModule : moduleNodes)
@@ -679,7 +705,9 @@ public class Main {
 					moduleNodes.remove(thisModule);
 			}
 			
-			Digraph.DigraphToFile("g5-cs", moduleNodes);
+
+			Digraph.DigraphToFile("G5"+String.valueOf(Module.getCount()), moduleNodes);
+
 		
 //		String[] inputUrls = new String[] {"http://www.cms.caltech.edu/academics/course_desc"};
 //		
