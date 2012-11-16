@@ -21,7 +21,7 @@ select * from Terms;
 select * from Documents;
 
 
-use Module
+use G5ModulesDB
 
 drop table Documents;
 drop table Terms;
@@ -45,7 +45,7 @@ select * from Documents;
 
 
 
-load data local infile '/home/raanan/Desktop/PPS/Modules/data' into table Terms 
+load data local infile '/data' into table Terms 
 fields terminated by ','
 lines terminated by '\n'
 (docId, word, count)
