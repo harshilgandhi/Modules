@@ -9,6 +9,8 @@ public class Module {
 	private String name;
 	private int id;
 	private String desc;
+        private String uni;
+        private List<Module> allPreReqModules= new ArrayList<Module>();
 	private List<Integer> preReqModulesId = new ArrayList<Integer>();
 	private List<Course> preReqCourses = new ArrayList<Course>();
 	private List<Integer> tempPreReqModulesId = new ArrayList<Integer>();
@@ -23,8 +25,17 @@ public class Module {
 	{
 		
 	}
+
+        public List<Module> getAllPreReqModules() {
+            return allPreReqModules;
+        }
+
+        public void setAllPreReqModules(List<Module> allPreReqModules) {
+            this.allPreReqModules = allPreReqModules;
+        }
 	
-	public List<Integer> getTempPreReqModulesId() {
+	
+        public List<Integer> getTempPreReqModulesId() {
 		return tempPreReqModulesId;
 	}
 	

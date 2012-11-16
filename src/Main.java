@@ -26,7 +26,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	private static String[] inputDescUrls = new String[] {"http://www.ucsd.edu/catalog/courses/CSE.html"};
+	private static String[] inputDescUrls = new String[] {"http://registrar.utexas.edu/archived/catalogs/grad07-09//ch04/ns/cs.crs.html"};
     private static String[] inputLinkUrls = new String[] {"http://www.cs.purdue.edu/academic_programs/courses/schedule/2012/Fall/undergraduate.sxhtml"};	
     private static String[] inputUrls=inputDescUrls;
     private static boolean usingLinks=false;
@@ -441,8 +441,8 @@ public class Main {
                 }
                 
         
-				Iterator<Entry<String, Course>> iteratorX = courseList.entrySet().iterator();
-		        while(iteratorX.hasNext())
+		Iterator<Entry<String, Course>> iteratorX = courseList.entrySet().iterator();
+		while(iteratorX.hasNext())
 		        {
 		            Course currentCourse=courseList.get(iteratorX.next().getKey());
 		            System.out.println("Course: "+currentCourse.getNum());
@@ -484,6 +484,7 @@ public class Main {
 						isConsidered = 0;
 						String[] moduleWords = currentModule.split(" ");
 						wc = 0; df = 0;
+
 						for(int i = 0; i < moduleWords.length; i ++)
 						{
 							isDigit = false;
@@ -506,7 +507,7 @@ public class Main {
 								
 							}
 						}
-						
+
 						if(wc <= 100 || df <= 30)
 						{
 							isModule = false;
@@ -539,6 +540,15 @@ public class Main {
 								moduleNames.add(module.getName());
 								System.out.println("ADDED MODULE======================================>" + currentModule);
 							}
+                                                        else
+                                                        {
+                                                            for(Module x: moduleSet)
+                                                            {
+                                                                if(x.getName().equals(currentModule)) 
+                                                                    modulesInsideThisCourse.add(x);
+                                                            }
+                                                           
+                                                        }
 						}
 					}
                                         thisCourse.setModules(modulesInsideThisCourse);
@@ -585,52 +595,61 @@ public class Main {
 					Course currentCourse=courseList.get(iterator2.next().getKey());
 					ArrayList<String> preIDs=currentCourse.getPreReq();
 					ArrayList<Module> allPrereqModulesInCourse=new ArrayList<Module>();
-					ArrayList<Integer> tempIdList = new ArrayList<Integer>(20);
-					ArrayList<Integer> tempCountList = new ArrayList<Integer>(20);
+					
 					for(String preID: preIDs)
 					{
 						if(courseList.get(preID) == null)
 							continue;
 						allPrereqModulesInCourse.addAll(courseList.get(preID).getModules());
-						for(int i = 0; i < allPrereqModulesInCourse.size(); i ++)
-						{
-							if(tempIdList.contains(allPrereqModulesInCourse.get(i).getId()))
-							{
-								int index = tempIdList.indexOf(allPrereqModulesInCourse.get(i).getId());
-								tempCountList.set(index, tempCountList.get(index)+1);
-							}
-							else
-							{
-								tempIdList.add(allPrereqModulesInCourse.get(i).getId());
-								int index = tempIdList.indexOf(allPrereqModulesInCourse.get(i).getId());
-								tempCountList.add(1);
-							}
+                                                for(Module m : currentCourse.getModules())
+                                                {                            
+                                                        m.setAllPreReqModules(allPrereqModulesInCourse);                                                                                                       
 						}
-					}
-					if(tempCountList.size() > 0)
-					{
-						sortTempArrays(tempCountList, tempIdList);
-//					Iterator it = moduleSet.iterator();
-						ArrayList<Integer> realTop2Prereq=new ArrayList<Integer>();
-						if(tempIdList.size()>2)
-                                                {
-                                                    for(int i=1; i<4;i++)
-                                                    {
-                                                       realTop2Prereq.add(tempIdList.get(tempIdList.size()-i));
-                                                       allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-i));   
-                                                    }                                                
+                                        }
+                                }
                                                 
-                                                }
-                                                else
+                                for(Module hh: moduleSet)                
+                                {                
+                                    ArrayList<Integer> tempIdList = new ArrayList<Integer>();
+                                    ArrayList<Integer> tempCountList = new ArrayList<Integer>();
+                                    
+                                    for(int i = 0; i < hh.getAllPreReqModules().size(); i ++)
+                                    {
+                                        List<Module> m=hh.getAllPreReqModules();
+                                        if(tempIdList.contains(m.get(i).getId()))
+                                        {
+                                                int index = tempIdList.indexOf(m.get(i).getId());
+                                                tempCountList.set(index, tempCountList.get(index)+1);
+                                        }
+                                        else
+                                        {
+                                                tempIdList.add(m.get(i).getId());
+                                                tempCountList.add(1);
+                                        }
+                                    }
+					
+                                    ArrayList<Integer> realTop3Prereq=new ArrayList<Integer>();
+                                    if(tempCountList.size() > 0)
+                                    {
+                                            sortTempArrays(tempCountList, tempIdList);
+//					Iterator it = moduleSet.iterator();
+                                            int numOfPre=3;
+                                            if(tempIdList.size()>numOfPre-1)
+                                            {
+                                                for(int i=1; i<=numOfPre; i++)
                                                 {
-                                                    realTop2Prereq.addAll(tempIdList);
-                                                    allPreReqModuleIDs.addAll(tempIdList);
-                                                }
-						for(Module m : currentCourse.getModules())
-                                                {
-                                                    m.setPreReqModulesId(realTop2Prereq);
-						}
-					}
+                                                   realTop3Prereq.add(tempIdList.get(tempIdList.size()-i));
+                                                   allPreReqModuleIDs.add(tempIdList.get(tempIdList.size()-i));   
+                                                }                                                
+
+                                            }
+                                            else
+                                            {
+                                                realTop3Prereq.addAll(tempIdList);
+                                                allPreReqModuleIDs.addAll(tempIdList);
+                                            }
+                                    }
+                                    hh.setPreReqModulesId(realTop3Prereq);
 				}
 
 				System.out.println("PRINTING MODULES AND THEIR DEPENDENCIES...");
