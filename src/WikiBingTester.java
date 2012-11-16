@@ -20,7 +20,7 @@ public class WikiBingTester {
 	private static String content;
 	private static byte[] contentRaw;
 	private static org.jsoup.nodes.Document resultDoc;
-	private static String accountKey = "";
+	private static String accountKey = "9htjdq6bRqnIrH5QrBh9LLyC9qVzZBLC+sflPBDjbMU=";
 	
 	private static String titleResult[] = new String[5];
 	
@@ -46,7 +46,7 @@ public class WikiBingTester {
 		}
 		bingURL.append("'");
 	
-		//&$top=5&$format=Atom";
+		//&$top=3&$format=Atom";
 		bingURL.append("&$top=5&$format=Atom");
 		
 		System.out.println("--->" + bingURL + "<---");
