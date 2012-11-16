@@ -25,9 +25,9 @@ import edu.stanford.nlp.trees.TreebankLanguagePack;
 public class NlpParser {
 
 	private static LexicalizedParser lexParser;
-	List<String> returnList = new ArrayList<String>();
-	List<String> realReturnList = new ArrayList<String>();
-	List<String> finalReturnList = new ArrayList<String>();
+	List<String> returnList;
+	List<String> realReturnList;
+	List<String> finalReturnList;
 	
 	static {
 		lexParser = LexicalizedParser.loadModel("edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz");
@@ -35,7 +35,9 @@ public class NlpParser {
 	
 	public List<String> getPotentialModules(String inputSentences)
 	{
-		
+		returnList = new ArrayList<String>();
+		realReturnList = new ArrayList<String>();
+		finalReturnList = new ArrayList<String>();
 		Main.countDescParsed ++;
 	    System.out.println("\n\n\n" + Main.countDescParsed + " COURSES PARSED\n\n");
 		

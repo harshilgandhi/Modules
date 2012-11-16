@@ -9,8 +9,8 @@ public class Module {
 	private String name;
 	private int id;
 	private String desc;
-	private List<Integer> preReqModulesId;
-	private List<Course> preReqCourses;
+	private List<Integer> preReqModulesId = new ArrayList<Integer>();
+	private List<Course> preReqCourses = new ArrayList<Course>();
 	private List<Integer> tempPreReqModulesId = new ArrayList<Integer>();
 	private List<Integer> tempPreReqModulesCount = new ArrayList<Integer>();
 	

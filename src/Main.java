@@ -279,9 +279,9 @@ public class Main {
                                         break; //if tempDesc not long enough, then we consider the description is missing
                                     }
                                 }
-                             }
-                         } 
-                     }
+                            }
+                        } 
+                    }
                 }
                 else//Find an <a href="...">...</a> in Course title.. basically findin the link in the "CELL"
                 {   
@@ -298,7 +298,7 @@ public class Main {
 		
 
 		
-        String[] ignoreWords = new String[] {"pre","homework","homeworks","","geometry","algebra","assignment","assignments","design","unit","explore","selected","explores","engineering","management","method","specifications","specification","units","programs","implementations","implementation","future","program","emphasis","techniques","more","proofs","'","","fundamental","limited","part","media","scientific","experience","fundamentals","topic","level","levels","topics","knowledge","s","campus","campuses","","fee","fees","none","laboratory","familiar","familiarity","use","books","prior","standard","recommended","book","area","quarter","semester",",","form","learn","learns","good","aka","floor","building","bldg","understanding","problem","problems","topic","student","students","standing","cs","cse","main","principle","principles","same","similar","cheap","math","maths","mathematics","practice","computer","computers","science","sciences","small","study","areas","or","  ","   ","un","cases","case","both","\\/","enrollment","an","sophomore","junior","senior","several","various","freshman","corequisite","corequisites","example","examples","preparation"," ","","do","to","a","no","pc","library","libraries","credit","high-school","high","co-requisites","co-requisite","corequisites","school","high-schools","schools","credits","course","courses","pre-requisite","pre-requisites","prerequisite","prerequisites","concept","concepts","basic","introduce","current","other","others","whose","introduces","skill","skills","practical","research", "projects", "labs", "lab", "laboratories", "seminar", "college", "precollege", "university", "class", "periods", "professor", "professors","undergrad", "undergraduate", "grad", "graduate", "studies", "instructor", "instructors","consent","able","about","across","after","all","almost","also","among","even","better","and","any","are","because","been","so","few","but","can","cannot","further","make","makes","many","ahead","could","dear","did","does","either","else","ever","every","for","from","get","got","had","has","have","her","hers","him","his","how","however","into","its","just","least","let","like","likely","may","might","in","on","most","must","neither","nor","not","off","often","only","our","own","other","say","says","she","the","rather","said","says","should","since","some","than","that","their","them","then","there","was","who","yet","you","why","these","they","this","twas","wants","were","what","when","where","which","while","whom","will","with","would","your","even"};	
+        String[] ignoreWords = new String[] {"pre","member","faculty","members","faculties","description","formal","focuses","focus","competition","competitions","hostile","candidates","candidacy","introductory","course","courses","candidate","lectures","uses","use","modern","schemes","scheme","elementary","proof","hour","hours","lecture","homework","curiculum","homeworks","teaching","assistant","assistants","","geometry","algebra","assignment","assignments","design","unit","explore","selected","explores","engineering","management","method","specifications","specification","units","programs","implementations","implementation","future","program","emphasis","techniques","more","proofs","'","","fundamental","limited","part","media","scientific","experience","fundamentals","topic","level","levels","topics","knowledge","s","campus","campuses","","fee","fees","none","laboratory","familiar","familiarity","use","books","prior","standard","recommended","book","area","quarter","semester",",","form","learn","learns","good","aka","floor","building","bldg","understanding","problem","problems","topic","student","students","standing","cs","cse","main","principle","principles","same","similar","cheap","math","maths","mathematics","practice","computer","computers","science","sciences","small","study","areas","or","  ","   ","un","cases","case","both","\\/","enrollment","an","sophomore","junior","senior","several","various","freshman","corequisite","corequisites","example","examples","preparation"," ","","do","to","a","no","pc","library","libraries","credit","high-school","high","co-requisites","co-requisite","corequisites","school","high-schools","schools","credits","course","courses","pre-requisite","pre-requisites","prerequisite","prerequisites","concept","concepts","basic","introduce","current","other","others","whose","introduces","skill","skills","practical","research", "projects", "labs", "lab", "laboratories", "seminar", "college", "precollege", "university", "class", "periods", "professor", "professors","undergrad", "undergraduate", "grad", "graduate", "studies", "instructor", "instructors","consent","able","about","across","after","all","almost","also","among","even","better","and","any","are","because","been","so","few","but","can","cannot","further","make","makes","many","ahead","could","dear","did","does","either","else","ever","every","for","from","get","got","had","has","have","her","hers","him","his","how","however","into","its","just","least","let","like","likely","may","might","in","on","most","must","neither","nor","not","off","often","only","our","own","other","say","says","she","the","rather","said","says","should","since","some","than","that","their","them","then","there","was","who","yet","you","why","these","they","this","twas","wants","were","what","when","where","which","while","whom","will","with","would","your","even"};	
         for(int i = 0; i < ignoreWords.length; i ++)
         {
         	ignoreList.add(ignoreWords[i]);
@@ -323,7 +323,7 @@ public class Main {
                         String regex3="(^Computer\\sScience\\s[0-9]{2,4}\\b)";
                         String regexPre1="(\\b[A-Z]{2,6}\\s?[a-zA-Z]?[0-9]{1,5}-?[a-zA-Z]{0,2}\\b)";
                         String regexPre2="(\\[0-9]{2,4}[a-zA-Z]\\b)";
-                        String regexPre3="(\\bComputer\\sScience\\s[0-9]{2,4}\\b)";
+                        String regexPre3="(\\bComputer\\sScience[s]?\\s[0-9]{2,4}\\b)";
                         //String regex3="(\\b[A-Z][0-9]{2,4}[a-zA-Z]?\\b)"
 			pattern1 = Pattern.compile(regex1);
                         pattern2 = Pattern.compile(regex2);
@@ -413,7 +413,15 @@ public class Main {
                 }
                 
         
-                System.out.println("CREATING COURSES DONE...");
+				Iterator<Entry<String, Course>> iteratorX = courseList.entrySet().iterator();
+		        while(iteratorX.hasNext())
+		        {
+		            Course currentCourse=courseList.get(iteratorX.next().getKey());
+		            System.out.println("Course: "+currentCourse.getNum());
+		            System.out.println("Description: "+currentCourse.getDesc());
+		            System.out.println("Prereq: "+currentCourse.getPreReq().toString());
+		        }        
+				System.out.println("CREATING COURSES DONE...");
 		
                 System.out.println("STARTED MODULE FINDING...");
                 Iterator<Entry<String, Course>> iterator = courseList.entrySet().iterator();
@@ -424,10 +432,10 @@ public class Main {
 				{
 					String a=(thisCourse = courseList.get(iterator.next().getKey())).getDesc();
 					System.out.println(a);
-					if(thisCourse.getPreReq().size() == 0)
-					{
-						continue;
-					}
+//					if(thisCourse.getPreReq().size() == 0)
+//					{
+//						continue;
+//					}
 					courseCount ++;
 					List<String> potentialModules = nlpParser.getPotentialModules(a);
 					boolean isModule = true;
@@ -458,15 +466,17 @@ public class Main {
 								System.out.println("imp word........................"+moduleWords[i]);
 								wc += dblookup.getWordCount(moduleWords[i], "ComputerScience");
 								df += dblookup.getWordDocFreq(moduleWords[i], "ComputerScience");
+								wc *= (3/5);
+								df *= (3/5);
 								if(wc <= 12 || df <= 8)
 								{
 									isModule = false;
 								}
-								if(wc > 32)
+								if(wc > 50)
 								{
 									isModule = true;
 								}
-								if(df > 12 && wc < 32)
+								if(df > moduleWords.length * 12 && wc < 32)
 								{
 									isModule = true;
 								}
@@ -576,9 +586,9 @@ public class Main {
                 //print out the results for debugging
 				for(Module currentModule : moduleSet)
 				{
-					currentModule.toString();
-					if(currentModule.getPreReqModulesId()==null)
-						System.out.println("No Pre-requisites found for this Module");
+					System.out.println(currentModule.toString());
+					if(currentModule.getPreReqModulesId().size()==0)
+						System.out.println("No Pre-requisites found for this Module--0 size");
 					else if(currentModule.getPreReqModulesId().size()==2)
 						System.out.println("Dependency --> " + currentModule.getPreReqModulesId().get(0) + ", " + currentModule.getPreReqModulesId().get(1));
 					else

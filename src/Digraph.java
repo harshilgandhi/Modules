@@ -17,15 +17,16 @@ public class Digraph {
       for (Module to : nodes) {
         w.write("\"" + to.getName() + "\"\n");
         List<Integer> preReqs = to.getPreReqModulesId();
-        for (Module from : nodes)
-          if(preReqs.contains(from.getId()))
-        	w.write("\"" + from.getName() + "\"->\"" + to.getName() + "\"\n");
+        if(!(preReqs.size() == 0))
+        	for (Module from : nodes)
+        		if(preReqs.contains(from.getId()))
+        			w.write("\"" + from.getName() + "\"->\"" + to.getName() + "\"\n");
       }
       w.write("}\n");
       w.close();
     }
     catch (Exception e) {
-      System.err.println(e.toString());
+      e.printStackTrace();
     }
     return true;
   }
